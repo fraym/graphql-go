@@ -234,8 +234,8 @@ func TestExecutesUsingAComplexSchema(t *testing.T) {
 					"name": "John Smith",
 					"pic": map[string]any{
 						"url":    "cdn://123",
-						"width":  640,
-						"height": 480,
+						"width":  int64(640),
+						"height": int64(480),
 					},
 					"recentArticle": map[string]any{
 						"id":          "1",

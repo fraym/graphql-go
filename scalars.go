@@ -9,130 +9,120 @@ import (
 	"github.com/fraym/graphql-go/language/ast"
 )
 
+const (
+	// Aligned with JavaScript integers that are limited to the range -(2^53 - 1) to 2^53 - 1,
+	// due to being encoded as double-precision floating-point numbers
+	MaxInt int64 = 9007199254740991
+	MinInt int64 = -9007199254740991
+)
+
 // As per the GraphQL Spec, Integers are only treated as valid when a valid
 // 32-bit signed integer, providing the broadest support across platforms.
 //
 // n.b. JavaScript's integers are safe between -(2^53 - 1) and 2^53 - 1 because
 // they are internally represented as IEEE 754 doubles.
-func coerceInt(value any) any {
+func coerceInt(value interface{}) interface{} {
 	switch value := value.(type) {
 	case bool:
-		if value {
-			return 1
+		if value == true {
+			return int64(1)
 		}
-		return 0
+		return int64(0)
 	case *bool:
 		if value == nil {
 			return nil
 		}
 		return coerceInt(*value)
 	case int:
-		if value < int(math.MinInt32) || value > int(math.MaxInt32) {
-			return nil
-		}
-		return value
+		return int64(value)
 	case *int:
 		if value == nil {
 			return nil
 		}
 		return coerceInt(*value)
 	case int8:
-		return int(value)
+		return int64(value)
 	case *int8:
 		if value == nil {
 			return nil
 		}
-		return int(*value)
+		return int64(*value)
 	case int16:
-		return int(value)
+		return int64(value)
 	case *int16:
 		if value == nil {
 			return nil
 		}
-		return int(*value)
+		return int64(*value)
 	case int32:
-		return int(value)
+		return int64(value)
 	case *int32:
 		if value == nil {
 			return nil
 		}
-		return int(*value)
+		return int64(*value)
 	case int64:
-		if value < int64(math.MinInt32) || value > int64(math.MaxInt32) {
-			return nil
-		}
-		return int(value)
+		return intOrNil(value)
 	case *int64:
 		if value == nil {
 			return nil
 		}
 		return coerceInt(*value)
 	case uint:
-		if value > math.MaxInt32 {
-			return nil
-		}
-		return int(value)
+		return int64(value)
 	case *uint:
 		if value == nil {
 			return nil
 		}
 		return coerceInt(*value)
 	case uint8:
-		return int(value)
+		return int64(value)
 	case *uint8:
 		if value == nil {
 			return nil
 		}
-		return int(*value)
+		return int64(*value)
 	case uint16:
-		return int(value)
+		return int64(value)
 	case *uint16:
 		if value == nil {
 			return nil
 		}
-		return int(*value)
+		return int64(*value)
 	case uint32:
-		if value > uint32(math.MaxInt32) {
-			return nil
-		}
-		return int(value)
+		return int64(value)
 	case *uint32:
 		if value == nil {
 			return nil
 		}
 		return coerceInt(*value)
 	case uint64:
-		if value > uint64(math.MaxInt32) {
+		if value > uint64(math.MaxInt64) {
+			// bypass intOrNil
 			return nil
 		}
-		return int(value)
+		return intOrNil(int64(value))
 	case *uint64:
 		if value == nil {
 			return nil
 		}
 		return coerceInt(*value)
 	case float32:
-		if value < float32(math.MinInt32) || value > float32(math.MaxInt32) {
-			return nil
-		}
-		return int(value)
+		return intOrNil(int64(value))
 	case *float32:
 		if value == nil {
 			return nil
 		}
 		return coerceInt(*value)
 	case float64:
-		if value < float64(math.MinInt32) || value > float64(math.MaxInt32) {
-			return nil
-		}
-		return int(value)
+		return intOrNil(int64(value))
 	case *float64:
 		if value == nil {
 			return nil
 		}
 		return coerceInt(*value)
 	case string:
-		val, err := strconv.ParseFloat(value, 64)
+		val, err := strconv.ParseFloat(value, 0)
 		if err != nil {
 			return nil
 		}
@@ -149,17 +139,27 @@ func coerceInt(value any) any {
 	return nil
 }
 
+// Integers are only safe when between -(2^53 - 1) and 2^53 - 1 due to being
+// encoded in JavaScript and represented in JSON as double-precision floating
+// point numbers, as specified by IEEE 754.
+func intOrNil(value int64) interface{} {
+	if MinInt <= value && value <= MaxInt {
+		return value
+	}
+	return nil
+}
+
 // Int is the GraphQL Integer type definition.
 var Int = NewScalar(ScalarConfig{
 	Name: "Int",
 	Description: "The `Int` scalar type represents non-fractional signed whole numeric " +
-		"values. Int can represent values between -(2^31) and 2^31 - 1. ",
+		"values. Int can represent values between  -(2^53  1) and 2^53 - 1. ",
 	Serialize:  coerceInt,
 	ParseValue: coerceInt,
-	ParseLiteral: func(valueAST ast.Value) any {
+	ParseLiteral: func(valueAST ast.Value) interface{} {
 		switch valueAST := valueAST.(type) {
 		case *ast.IntValue:
-			if intValue, err := strconv.Atoi(valueAST.Value); err == nil {
+			if intValue, err := strconv.ParseInt(valueAST.Value, 10, 64); err == nil {
 				return intValue
 			}
 		}
@@ -167,10 +167,10 @@ var Int = NewScalar(ScalarConfig{
 	},
 })
 
-func coerceFloat(value any) any {
+func coerceFloat(value interface{}) interface{} {
 	switch value := value.(type) {
 	case bool:
-		if value {
+		if value == true {
 			return 1.0
 		}
 		return 0.0
@@ -264,7 +264,7 @@ func coerceFloat(value any) any {
 		}
 		return coerceFloat(*value)
 	case string:
-		val, err := strconv.ParseFloat(value, 64)
+		val, err := strconv.ParseFloat(value, 0)
 		if err != nil {
 			return nil
 		}
@@ -289,7 +289,7 @@ var Float = NewScalar(ScalarConfig{
 		"[IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). ",
 	Serialize:  coerceFloat,
 	ParseValue: coerceFloat,
-	ParseLiteral: func(valueAST ast.Value) any {
+	ParseLiteral: func(valueAST ast.Value) interface{} {
 		switch valueAST := valueAST.(type) {
 		case *ast.FloatValue:
 			if floatValue, err := strconv.ParseFloat(valueAST.Value, 64); err == nil {
@@ -304,7 +304,7 @@ var Float = NewScalar(ScalarConfig{
 	},
 })
 
-func coerceString(value any) any {
+func coerceString(value interface{}) interface{} {
 	if v, ok := value.(*string); ok {
 		if v == nil {
 			return nil
@@ -322,7 +322,7 @@ var String = NewScalar(ScalarConfig{
 		"represent free-form human-readable text.",
 	Serialize:  coerceString,
 	ParseValue: coerceString,
-	ParseLiteral: func(valueAST ast.Value) any {
+	ParseLiteral: func(valueAST ast.Value) interface{} {
 		switch valueAST := valueAST.(type) {
 		case *ast.StringValue:
 			return valueAST.Value
@@ -331,7 +331,7 @@ var String = NewScalar(ScalarConfig{
 	},
 })
 
-func coerceBool(value any) any {
+func coerceBool(value interface{}) interface{} {
 	switch value := value.(type) {
 	case bool:
 		return value
@@ -481,7 +481,7 @@ var Boolean = NewScalar(ScalarConfig{
 	Description: "The `Boolean` scalar type represents `true` or `false`.",
 	Serialize:   coerceBool,
 	ParseValue:  coerceBool,
-	ParseLiteral: func(valueAST ast.Value) any {
+	ParseLiteral: func(valueAST ast.Value) interface{} {
 		switch valueAST := valueAST.(type) {
 		case *ast.BooleanValue:
 			return valueAST.Value
@@ -500,7 +500,7 @@ var ID = NewScalar(ScalarConfig{
 		"(such as `4`) input value will be accepted as an ID.",
 	Serialize:  coerceString,
 	ParseValue: coerceString,
-	ParseLiteral: func(valueAST ast.Value) any {
+	ParseLiteral: func(valueAST ast.Value) interface{} {
 		switch valueAST := valueAST.(type) {
 		case *ast.IntValue:
 			return valueAST.Value
@@ -511,7 +511,7 @@ var ID = NewScalar(ScalarConfig{
 	},
 })
 
-func serializeDateTime(value any) any {
+func serializeDateTime(value interface{}) interface{} {
 	switch value := value.(type) {
 	case time.Time:
 		buff, err := value.MarshalText()
@@ -530,7 +530,7 @@ func serializeDateTime(value any) any {
 	}
 }
 
-func unserializeDateTime(value any) any {
+func unserializeDateTime(value interface{}) interface{} {
 	switch value := value.(type) {
 	case []byte:
 		t := time.Time{}
@@ -560,7 +560,7 @@ var DateTime = NewScalar(ScalarConfig{
 		" The DateTime is serialized as an RFC 3339 quoted string",
 	Serialize:  serializeDateTime,
 	ParseValue: unserializeDateTime,
-	ParseLiteral: func(valueAST ast.Value) any {
+	ParseLiteral: func(valueAST ast.Value) interface{} {
 		switch valueAST := valueAST.(type) {
 		case *ast.StringValue:
 			return unserializeDateTime(valueAST.Value)

@@ -14,13 +14,13 @@ var enumTypeTestColorType = graphql.NewEnum(graphql.EnumConfig{
 	Name: "Color",
 	Values: graphql.EnumValueConfigMap{
 		"RED": &graphql.EnumValueConfig{
-			Value: 0,
+			Value: int64(0),
 		},
 		"GREEN": &graphql.EnumValueConfig{
-			Value: 1,
+			Value: int64(1),
 		},
 		"BLUE": &graphql.EnumValueConfig{
-			Value: 2,
+			Value: int64(2),
 		},
 	},
 })
@@ -151,7 +151,7 @@ func TestTypeSystem_EnumValues_AcceptsEnumLiteralsAsInput(t *testing.T) {
 	query := "{ colorInt(fromEnum: GREEN) }"
 	expected := &graphql.Result{
 		Data: map[string]any{
-			"colorInt": 1,
+			"colorInt": int64(1),
 		},
 	}
 	result := executeEnumTypeTest(t, query)
@@ -348,7 +348,7 @@ func TestTypeSystem_EnumValues_DoesNotAcceptStringVariablesAsEnumInput(t *testin
 func TestTypeSystem_EnumValues_DoesNotAcceptInternalValueVariableAsEnumInput(t *testing.T) {
 	query := `query test($color: Int!) { colorEnum(fromEnum: $color) }`
 	params := map[string]any{
-		"color": 2,
+		"color": int64(2),
 	}
 	expected := &graphql.Result{
 		Data: nil,
@@ -372,7 +372,7 @@ func TestTypeSystem_EnumValues_EnumValueMayHaveAnInternalValueOfZero(t *testing.
 	expected := &graphql.Result{
 		Data: map[string]any{
 			"colorEnum": "RED",
-			"colorInt":  0,
+			"colorInt":  int64(0),
 		},
 	}
 	result := executeEnumTypeTest(t, query)
@@ -417,10 +417,10 @@ func TestTypeSystem_EnumValues_EnumValueMayBePointer(t *testing.T) {
 						},
 					}),
 					Resolve: func(_ graphql.ResolveParams) (any, error) {
-						one := 1
+						one := int64(1)
 						return struct {
-							Color *int `graphql:"color"`
-							Foo   *int `graphql:"foo"`
+							Color *int64 `graphql:"color"`
+							Foo   *int64 `graphql:"foo"`
 						}{&one, &one}, nil
 					},
 				},
@@ -432,7 +432,7 @@ func TestTypeSystem_EnumValues_EnumValueMayBePointer(t *testing.T) {
 		Data: map[string]any{
 			"query": map[string]any{
 				"color": "GREEN",
-				"foo":   1,
+				"foo":   int64(1),
 			},
 		},
 	}

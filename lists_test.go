@@ -64,7 +64,7 @@ func TestLists_ListOfNullableObjects_ContainsValues(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, 2,
+					int64(1), int64(2),
 				},
 			},
 		},
@@ -81,7 +81,7 @@ func TestLists_ListOfNullableObjects_ContainsNull(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, nil, 2,
+					int64(1), nil, int64(2),
 				},
 			},
 		},
@@ -116,7 +116,7 @@ func TestLists_ListOfNullableFunc_ContainsValues(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, 2,
+					int64(1), int64(2),
 				},
 			},
 		},
@@ -138,7 +138,7 @@ func TestLists_ListOfNullableFunc_ContainsNull(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, nil, 2,
+					int64(1), nil, int64(2),
 				},
 			},
 		},
@@ -182,7 +182,7 @@ func TestLists_ListOfNullableArrayOfFuncContainsValues(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, 2,
+					int64(1), int64(2),
 				},
 			},
 		},
@@ -210,7 +210,7 @@ func TestLists_ListOfNullableArrayOfFuncContainsNulls(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, nil, 2,
+					int64(1), nil, int64(2),
 				},
 			},
 		},
@@ -228,7 +228,7 @@ func TestLists_NonNullListOfNullableObjectsContainsValues(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, 2,
+					int64(1), int64(2),
 				},
 			},
 		},
@@ -245,7 +245,7 @@ func TestLists_NonNullListOfNullableObjectsContainsNull(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, nil, 2,
+					int64(1), nil, int64(2),
 				},
 			},
 		},
@@ -293,7 +293,7 @@ func TestLists_NonNullListOfNullableFunc_ContainsValues(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, 2,
+					int64(1), int64(2),
 				},
 			},
 		},
@@ -315,7 +315,7 @@ func TestLists_NonNullListOfNullableFunc_ContainsNull(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, nil, 2,
+					int64(1), nil, int64(2),
 				},
 			},
 		},
@@ -372,7 +372,7 @@ func TestLists_NonNullListOfNullableArrayOfFunc_ContainsValues(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, 2,
+					int64(1), int64(2),
 				},
 			},
 		},
@@ -400,7 +400,7 @@ func TestLists_NonNullListOfNullableArrayOfFunc_ContainsNulls(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, nil, 2,
+					int64(1), nil, int64(2),
 				},
 			},
 		},
@@ -418,7 +418,7 @@ func TestLists_NullableListOfNonNullObjects_ContainsValues(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, 2,
+					int64(1), int64(2),
 				},
 			},
 		},
@@ -485,7 +485,7 @@ func TestLists_NullableListOfNonNullFunc_ContainsValues(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, 2,
+					int64(1), int64(2),
 				},
 			},
 		},
@@ -565,7 +565,7 @@ func TestLists_NullableListOfNonNullArrayOfFunc_ContainsValues(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, 2,
+					int64(1), int64(2),
 				},
 			},
 		},
@@ -632,7 +632,7 @@ func TestLists_NonNullListOfNonNullObjects_ContainsValues(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, 2,
+					int64(1), int64(2),
 				},
 			},
 		},
@@ -709,7 +709,7 @@ func TestLists_NonNullListOfNonNullFunc_ContainsValues(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, 2,
+					int64(1), int64(2),
 				},
 			},
 		},
@@ -800,7 +800,7 @@ func TestLists_NonNullListOfNonNullArrayOfFunc_ContainsValues(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, 2,
+					int64(1), int64(2),
 				},
 			},
 		},
@@ -892,7 +892,7 @@ func TestLists_ArrayOfNullableObjects_ContainsValues(t *testing.T) {
 		Data: map[string]any{
 			"nest": map[string]any{
 				"test": []any{
-					1, 2,
+					int64(1), int64(2),
 				},
 			},
 		},
