@@ -17,7 +17,7 @@ import (
 func coerceInt(value interface{}) interface{} {
 	switch value := value.(type) {
 	case bool:
-		if value == true {
+		if value {
 			return 1
 		}
 		return 0
@@ -132,7 +132,7 @@ func coerceInt(value interface{}) interface{} {
 		}
 		return coerceInt(*value)
 	case string:
-		val, err := strconv.ParseFloat(value, 0)
+		val, err := strconv.ParseFloat(value, 64)
 		if err != nil {
 			return nil
 		}
@@ -170,7 +170,7 @@ var Int = NewScalar(ScalarConfig{
 func coerceFloat(value interface{}) interface{} {
 	switch value := value.(type) {
 	case bool:
-		if value == true {
+		if value {
 			return 1.0
 		}
 		return 0.0
@@ -264,7 +264,7 @@ func coerceFloat(value interface{}) interface{} {
 		}
 		return coerceFloat(*value)
 	case string:
-		val, err := strconv.ParseFloat(value, 0)
+		val, err := strconv.ParseFloat(value, 64)
 		if err != nil {
 			return nil
 		}

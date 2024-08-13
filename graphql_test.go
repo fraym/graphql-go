@@ -137,8 +137,7 @@ func TestBasicGraphQLExample(t *testing.T) {
 		t.Fatalf("wrong result, unexpected errors: %v", err.Error())
 	}
 	query := "{ hello }"
-	var expected interface{}
-	expected = map[string]interface{}{
+	expected := map[string]interface{}{
 		"hello": "world",
 	}
 
@@ -152,7 +151,6 @@ func TestBasicGraphQLExample(t *testing.T) {
 	if !reflect.DeepEqual(result.Data, expected) {
 		t.Fatalf("wrong result, query: %v, graphql result diff: %v", query, testutil.Diff(expected, result))
 	}
-
 }
 
 func TestThreadsContextFromParamsThrough(t *testing.T) {
@@ -182,7 +180,8 @@ func TestThreadsContextFromParamsThrough(t *testing.T) {
 	result := graphql.Do(graphql.Params{
 		Schema:        schema,
 		RequestString: query,
-		Context:       context.WithValue(context.TODO(), "a", "xyz"),
+		//nolint SA1029 ignore this!
+		Context: context.WithValue(context.TODO(), "a", "xyz"),
 	})
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
@@ -191,7 +190,6 @@ func TestThreadsContextFromParamsThrough(t *testing.T) {
 	if !reflect.DeepEqual(result.Data, expected) {
 		t.Fatalf("wrong result, query: %v, graphql result diff: %v", query, testutil.Diff(expected, result))
 	}
-
 }
 
 func TestNewErrorChecksNilNodes(t *testing.T) {

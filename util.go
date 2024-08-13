@@ -11,9 +11,11 @@ const TAG = "json"
 
 // can't take recursive slice type
 // e.g
-// type Person struct{
-//	Friends []Person
-// }
+//
+//	type Person struct{
+//		Friends []Person
+//	}
+//
 // it will throw panic stack-overflow
 func BindFields(obj interface{}) Fields {
 	t := reflect.TypeOf(obj)
@@ -163,7 +165,7 @@ func extractTag(tag reflect.StructTag) string {
 // lazy way of binding args
 func BindArg(obj interface{}, tags ...string) FieldConfigArgument {
 	v := reflect.Indirect(reflect.ValueOf(obj))
-	var config = make(FieldConfigArgument)
+	config := make(FieldConfigArgument)
 	for i := 0; i < v.NumField(); i++ {
 		field := v.Type().Field(i)
 

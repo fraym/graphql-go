@@ -540,10 +540,7 @@ func isSlice(value interface{}) bool {
 		return false
 	}
 	typ := reflect.TypeOf(value)
-	if typ.Kind() == reflect.Slice {
-		return true
-	}
-	return false
+	return typ.Kind() == reflect.Slice
 }
 
 func isStructNode(node interface{}) bool {
@@ -575,7 +572,6 @@ func isNode(node interface{}) bool {
 	case reflect.Map:
 		return true
 	case reflect.Ptr:
-		val = val.Elem()
 	}
 	_, ok := node.(ast.Node)
 	return ok

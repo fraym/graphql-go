@@ -210,8 +210,7 @@ func readDigits(s *source.Source, start int, firstCode rune, codeLength int) (in
 		}
 		return position, nil
 	}
-	var description string
-	description = fmt.Sprintf("Invalid number, expected digit but got: %v.", printCharCode(code))
+	description := fmt.Sprintf("Invalid number, expected digit but got: %v.", printCharCode(code))
 	return position, gqlerrors.NewSyntaxError(s, position, description)
 }
 
@@ -243,28 +242,20 @@ func readString(s *source.Source, start int) (Token, error) {
 				switch code {
 				case '"':
 					valueBuffer.WriteRune('"')
-					break
 				case '/':
 					valueBuffer.WriteRune('/')
-					break
 				case '\\':
 					valueBuffer.WriteRune('\\')
-					break
 				case 'b':
 					valueBuffer.WriteRune('\b')
-					break
 				case 'f':
 					valueBuffer.WriteRune('\f')
-					break
 				case 'n':
 					valueBuffer.WriteRune('\n')
-					break
 				case 'r':
 					valueBuffer.WriteRune('\r')
-					break
 				case 't':
 					valueBuffer.WriteRune('\t')
-					break
 				case 'u':
 					// Check if there are at least 4 bytes available
 					if len(body) <= position+4 {
@@ -286,7 +277,6 @@ func readString(s *source.Source, start int) (Token, error) {
 					valueBuffer.WriteRune(charCode)
 					position += 4
 					runePosition += 4
-					break
 				default:
 					return Token{}, gqlerrors.NewSyntaxError(s, runePosition,
 						fmt.Sprintf(`Invalid character escape sequence: \\%c.`, code))
@@ -509,14 +499,6 @@ func readToken(s *source.Source, fromPosition int) (Token, error) {
 	// )
 	case ')':
 		return makeToken(PAREN_R, position, position+1, ""), nil
-	// .
-	case '.':
-		next1, _ := runeAt(body, position+1)
-		next2, _ := runeAt(body, position+2)
-		if next1 == '.' && next2 == '.' {
-			return makeToken(SPREAD, position, position+3, ""), nil
-		}
-		break
 	// :
 	case ':':
 		return makeToken(COLON, position, position+1, ""), nil
@@ -570,6 +552,13 @@ func readToken(s *source.Source, fromPosition int) (Token, error) {
 			token, err = readString(s, position)
 		}
 		return token, err
+	// .
+	case '.':
+		next1, _ := runeAt(body, position+1)
+		next2, _ := runeAt(body, position+2)
+		if next1 == '.' && next2 == '.' {
+			return makeToken(SPREAD, position, position+3, ""), nil
+		}
 	}
 	description := fmt.Sprintf("Unexpected character %v.", printCharCode(code))
 	return Token{}, gqlerrors.NewSyntaxError(s, runePosition, description)

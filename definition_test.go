@@ -23,6 +23,7 @@ var blogImage = graphql.NewObject(graphql.ObjectConfig{
 		},
 	},
 })
+
 var blogAuthor = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Author",
 	Fields: graphql.Fields{
@@ -46,6 +47,7 @@ var blogAuthor = graphql.NewObject(graphql.ObjectConfig{
 		"recentArticle": &graphql.Field{},
 	},
 })
+
 var blogArticle = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Article",
 	Fields: graphql.Fields{
@@ -118,21 +120,25 @@ var objectType = graphql.NewObject(graphql.ObjectConfig{
 		return true
 	},
 })
+
 var interfaceType = graphql.NewInterface(graphql.InterfaceConfig{
 	Name: "Interface",
 })
+
 var unionType = graphql.NewUnion(graphql.UnionConfig{
 	Name: "Union",
 	Types: []*graphql.Object{
 		objectType,
 	},
 })
+
 var enumType = graphql.NewEnum(graphql.EnumConfig{
 	Name: "Enum",
 	Values: graphql.EnumValueConfigMap{
 		"foo": &graphql.EnumValueConfig{},
 	},
 })
+
 var inputObjectType = graphql.NewInputObject(graphql.InputObjectConfig{
 	Name: "InputObject",
 })
@@ -155,7 +161,7 @@ func TestTypeSystem_DefinitionExample_DefinesAQueryOnlySchema(t *testing.T) {
 		t.Fatalf("expected blogSchema.GetQueryType() == blogQuery")
 	}
 
-	articleField, _ := blogQuery.Fields()["article"]
+	articleField := blogQuery.Fields()["article"]
 	if articleField == nil {
 		t.Fatalf("articleField is nil")
 	}
@@ -232,7 +238,7 @@ func TestTypeSystem_DefinitionExample_DefinesAMutationScheme(t *testing.T) {
 		t.Fatalf("expected blogSchema.GetMutationType() == blogMutation")
 	}
 
-	writeMutation, _ := blogMutation.Fields()["writeArticle"]
+	writeMutation := blogMutation.Fields()["writeArticle"]
 	if writeMutation == nil {
 		t.Fatalf("writeMutation is nil")
 	}
@@ -261,7 +267,7 @@ func TestTypeSystem_DefinitionExample_DefinesASubscriptionScheme(t *testing.T) {
 		t.Fatalf("expected blogSchema.SubscriptionType() == blogSubscription")
 	}
 
-	subMutation, _ := blogSubscription.Fields()["articleSubscribe"]
+	subMutation := blogSubscription.Fields()["articleSubscribe"]
 	if subMutation == nil {
 		t.Fatalf("subMutation is nil")
 	}
@@ -334,7 +340,6 @@ func TestTypeSystem_DefinitionExample_IncludesNestedInputObjectsInTheMap(t *test
 }
 
 func TestTypeSystem_DefinitionExample_IncludesInterfacesSubTypesInTheTypeMap(t *testing.T) {
-
 	someInterface := graphql.NewInterface(graphql.InterfaceConfig{
 		Name: "SomeInterface",
 		Fields: graphql.Fields{
@@ -376,7 +381,6 @@ func TestTypeSystem_DefinitionExample_IncludesInterfacesSubTypesInTheTypeMap(t *
 }
 
 func TestTypeSystem_DefinitionExample_IncludesInterfacesThunkSubtypesInTheTypeMap(t *testing.T) {
-
 	someInterface := graphql.NewInterface(graphql.InterfaceConfig{
 		Name: "SomeInterface",
 		Fields: graphql.Fields{
@@ -420,7 +424,6 @@ func TestTypeSystem_DefinitionExample_IncludesInterfacesThunkSubtypesInTheTypeMa
 }
 
 func TestTypeSystem_DefinitionExample_StringifiesSimpleTypes(t *testing.T) {
-
 	type Test struct {
 		ttype    graphql.Type
 		expected string
@@ -507,6 +510,7 @@ func TestTypeSystem_DefinitionExample_ProhibitsNestingNonNullInsideNonNull(t *te
 		t.Fatalf(`expected %v , got: %v`, expected, ttype.Error())
 	}
 }
+
 func TestTypeSystem_DefinitionExample_ProhibitsNilInNonNull(t *testing.T) {
 	ttype := graphql.NewNonNull(nil)
 	expected := `Can only create NonNull of a Nullable Type but got: <nil>.`
@@ -514,6 +518,7 @@ func TestTypeSystem_DefinitionExample_ProhibitsNilInNonNull(t *testing.T) {
 		t.Fatalf(`expected %v , got: %v`, expected, ttype.Error())
 	}
 }
+
 func TestTypeSystem_DefinitionExample_ProhibitsNilTypeInUnions(t *testing.T) {
 	ttype := graphql.NewUnion(graphql.UnionConfig{
 		Name:  "BadUnion",
@@ -525,6 +530,7 @@ func TestTypeSystem_DefinitionExample_ProhibitsNilTypeInUnions(t *testing.T) {
 		t.Fatalf(`expected %v , got: %v`, expected, ttype.Error())
 	}
 }
+
 func TestTypeSystem_DefinitionExample_DoesNotMutatePassedFieldDefinitions(t *testing.T) {
 	fields := graphql.Fields{
 		"field1": &graphql.Field{
@@ -640,7 +646,6 @@ func TestTypeSystem_DefinitionExampe_AllowsCyclicFieldTypes(t *testing.T) {
 	if !reflect.DeepEqual(fieldMap["name"].Type, graphql.String) {
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(fieldMap["bestFriend"].Type, personType))
 	}
-
 }
 
 func TestTypeSystem_DefinitionExample_CanAddInputObjectField(t *testing.T) {
@@ -719,7 +724,7 @@ func TestTypeSystem_DefinitionExample_HandlesInvalidUnionTypes(t *testing.T) {
 	})
 
 	unionTypes := someUnion.Types()
-	expected := "Unknown Union.Types type: graphql.InterfacesThunk"
+	expected := "unknown Union.Types type: graphql.InterfacesThunk"
 
 	if someUnion.Error().Error() != expected {
 		t.Fatalf("Unexpected error, got: %v, want: %v", someUnion.Error().Error(), expected)

@@ -20,7 +20,8 @@ import (
 func getVariableValues(
 	schema Schema,
 	definitionASTs []*ast.VariableDefinition,
-	inputs map[string]interface{}) (map[string]interface{}, error) {
+	inputs map[string]interface{},
+) (map[string]interface{}, error) {
 	values := map[string]interface{}{}
 	for _, defAST := range definitionASTs {
 		if defAST == nil || defAST.Variable == nil || defAST.Variable.Name == nil {
@@ -40,8 +41,8 @@ func getVariableValues(
 // definitions and list of argument AST nodes.
 func getArgumentValues(
 	argDefs []*Argument, argASTs []*ast.Argument,
-	variableValues map[string]interface{}) map[string]interface{} {
-
+	variableValues map[string]interface{},
+) map[string]interface{} {
 	argASTMap := map[string]*ast.Argument{}
 	for _, argAST := range argASTs {
 		if argAST.Name != nil {
@@ -138,7 +139,7 @@ func coerceValue(ttype Input, value interface{}) interface{} {
 	case *NonNull:
 		return coerceValue(ttype.OfType, value)
 	case *List:
-		var values = []interface{}{}
+		values := []interface{}{}
 		valType := reflect.ValueOf(value)
 		if valType.Kind() == reflect.Slice {
 			for i := 0; i < valType.Len(); i++ {
@@ -149,7 +150,7 @@ func coerceValue(ttype Input, value interface{}) interface{} {
 		}
 		return append(values, coerceValue(ttype.OfType, value))
 	case *InputObject:
-		var obj = map[string]interface{}{}
+		obj := map[string]interface{}{}
 		valueMap, _ := value.(map[string]interface{})
 		if valueMap == nil {
 			valueMap = map[string]interface{}{}
@@ -275,10 +276,8 @@ func isValidInputValue(value interface{}, ttype Input) (bool, []string) {
 		// Ensure every defined field is valid.
 		for _, fieldName := range fieldNames {
 			_, messages := isValidInputValue(valueMap[fieldName], fields[fieldName].Type)
-			if messages != nil {
-				for _, message := range messages {
-					messagesReduce = append(messagesReduce, fmt.Sprintf(`In field "%v": %v`, fieldName, message))
-				}
+			for _, message := range messages {
+				messagesReduce = append(messagesReduce, fmt.Sprintf(`In field "%v": %v`, fieldName, message))
 			}
 		}
 		return (len(messagesReduce) == 0), messagesReduce
@@ -314,7 +313,7 @@ func isNullish(src interface{}) bool {
 			return true
 		}
 	case reflect.Int:
-		return math.IsNaN(float64(value.Int()))
+		return false
 	case reflect.Float32, reflect.Float64:
 		return math.IsNaN(float64(value.Float()))
 	}

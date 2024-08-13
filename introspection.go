@@ -56,7 +56,6 @@ var TypeMetaFieldDef *FieldDefinition
 var TypeNameMetaFieldDef *FieldDefinition
 
 func init() {
-
 	TypeKindEnumType = NewEnum(EnumConfig{
 		Name:        "__TypeKind",
 		Description: "An enum describing what kind of type a given `__Type` is",
@@ -673,7 +672,6 @@ func init() {
 			return p.Info.ParentType.Name(), nil
 		},
 	}
-
 }
 
 // Produces a GraphQL Value AST given a Golang value.
@@ -690,7 +688,6 @@ func init() {
 // | Number        | Int / Float          |
 
 func astFromValue(value interface{}, ttype Type) ast.Value {
-
 	if ttype, ok := ttype.(*NonNull); ok {
 		// Note: we're not checking that the result is non-null.
 		// This function is not responsible for validating the input value.
@@ -735,9 +732,9 @@ func astFromValue(value interface{}, ttype Type) ast.Value {
 		return val
 	}
 
-	if valueVal.Type().Kind() == reflect.Map {
-		// TODO: implement astFromValue from Map to Value
-	}
+	// TODO: implement astFromValue from Map to Value
+	// if valueVal.Type().Kind() == reflect.Map {
+	// }
 
 	if value, ok := value.(bool); ok {
 		return ast.NewBooleanValue(&ast.BooleanValue{
