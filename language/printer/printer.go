@@ -2,10 +2,9 @@ package printer
 
 import (
 	"fmt"
+	"reflect"
 	"strconv"
 	"strings"
-
-	"reflect"
 
 	"github.com/graphql-go/graphql/language/ast"
 	"github.com/graphql-go/graphql/language/visitor"
@@ -31,6 +30,7 @@ func getMapValue(m map[string]interface{}, key string) interface{} {
 	}
 	return valMap
 }
+
 func getMapSliceValue(m map[string]interface{}, key string) []interface{} {
 	tokens := strings.Split(key, ".")
 	valMap := m
@@ -48,6 +48,7 @@ func getMapSliceValue(m map[string]interface{}, key string) []interface{} {
 	}
 	return []interface{}{}
 }
+
 func getMapValueString(m map[string]interface{}, key string) string {
 	tokens := strings.Split(key, ".")
 	valMap := m
@@ -71,6 +72,7 @@ func getMapValueString(m map[string]interface{}, key string) string {
 	}
 	return ""
 }
+
 func getDescription(raw interface{}) string {
 	var desc string
 
@@ -382,6 +384,15 @@ var printDocASTReducer = map[string]visitor.VisitFunc{
 	"BooleanValue": func(p visitor.VisitFuncParams) (string, interface{}) {
 		switch node := p.Node.(type) {
 		case *ast.BooleanValue:
+			return visitor.ActionUpdate, fmt.Sprintf("%v", node.Value)
+		case map[string]interface{}:
+			return visitor.ActionUpdate, getMapValueString(node, "Value")
+		}
+		return visitor.ActionNoChange, nil
+	},
+	"NullValue": func(p visitor.VisitFuncParams) (string, interface{}) {
+		switch node := p.Node.(type) {
+		case *ast.NullValue:
 			return visitor.ActionUpdate, fmt.Sprintf("%v", node.Value)
 		case map[string]interface{}:
 			return visitor.ActionUpdate, getMapValueString(node, "Value")
