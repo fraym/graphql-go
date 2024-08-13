@@ -3,9 +3,9 @@ package graphql_test
 import (
 	"testing"
 
-	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/graphql/gqlerrors"
-	"github.com/graphql-go/graphql/testutil"
+	"github.com/fraym/graphql-go"
+	"github.com/fraym/graphql-go/gqlerrors"
+	"github.com/fraym/graphql-go/testutil"
 )
 
 func TestValidate_VariablesAreInputTypes_(t *testing.T) {
@@ -15,6 +15,7 @@ func TestValidate_VariablesAreInputTypes_(t *testing.T) {
       }
     `)
 }
+
 func TestValidate_VariablesAreInputTypes_1(t *testing.T) {
 	testutil.ExpectFailsRule(t, graphql.VariablesAreInputTypesRule, `
       query Foo($a: Dog, $b: [[CatOrDog!]]!, $c: Pet) {

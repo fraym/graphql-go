@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/graphql/language/ast"
+	"github.com/fraym/graphql-go"
+	"github.com/fraym/graphql-go/language/ast"
 )
 
 // NullString to be used in place of sql.NullString

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/graphql-go/graphql"
+	"github.com/fraym/graphql-go"
 )
 
 type user struct {

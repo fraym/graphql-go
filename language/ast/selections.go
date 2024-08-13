@@ -1,7 +1,7 @@
 package ast
 
 import (
-	"github.com/graphql-go/graphql/language/kinds"
+	"github.com/fraym/graphql-go/language/kinds"
 )
 
 type Selection interface {
@@ -9,9 +9,11 @@ type Selection interface {
 }
 
 // Ensure that all definition types implements Selection interface
-var _ Selection = (*Field)(nil)
-var _ Selection = (*FragmentSpread)(nil)
-var _ Selection = (*InlineFragment)(nil)
+var (
+	_ Selection = (*Field)(nil)
+	_ Selection = (*FragmentSpread)(nil)
+	_ Selection = (*InlineFragment)(nil)
+)
 
 // Field implements Node, Selection
 type Field struct {

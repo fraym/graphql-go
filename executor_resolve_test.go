@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/graphql/testutil"
+	"github.com/fraym/graphql-go"
+	"github.com/fraym/graphql-go/testutil"
 )
 
 func testSchema(t *testing.T, testField *graphql.Field) graphql.Schema {

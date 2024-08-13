@@ -4,10 +4,10 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/graphql-go/graphql/gqlerrors"
-	"github.com/graphql-go/graphql/language/ast"
-	"github.com/graphql-go/graphql/language/location"
-	"github.com/graphql-go/graphql/language/source"
+	"github.com/fraym/graphql-go/gqlerrors"
+	"github.com/fraym/graphql-go/language/ast"
+	"github.com/fraym/graphql-go/language/location"
+	"github.com/fraym/graphql-go/language/source"
 )
 
 func parse(t *testing.T, query string) *ast.Document {
@@ -31,7 +31,6 @@ func testLoc(start int, end int) *ast.Location {
 }
 
 func TestSchemaParser_SimpleType(t *testing.T) {
-
 	body := `
 type Hello {
   world: String
@@ -75,7 +74,6 @@ type Hello {
 }
 
 func TestSchemaParser_SimpleExtension(t *testing.T) {
-
 	body := `
 extend type Hello {
   world: String
@@ -122,7 +120,6 @@ extend type Hello {
 }
 
 func TestSchemaParser_SimpleNonNullType(t *testing.T) {
-
 	body := `
 type Hello {
   world: String!

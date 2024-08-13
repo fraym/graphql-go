@@ -3,9 +3,9 @@ package graphql_test
 import (
 	"testing"
 
-	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/graphql/gqlerrors"
-	"github.com/graphql-go/graphql/testutil"
+	"github.com/fraym/graphql-go"
+	"github.com/fraym/graphql-go/gqlerrors"
+	"github.com/fraym/graphql-go/testutil"
 )
 
 func TestValidate_NoUnusedFragments_AllFragmentNamesAreUsed(t *testing.T) {
@@ -30,6 +30,7 @@ func TestValidate_NoUnusedFragments_AllFragmentNamesAreUsed(t *testing.T) {
       }
     `)
 }
+
 func TestValidate_NoUnusedFragments_AllFragmentNamesAreUsedByMultipleOperations(t *testing.T) {
 	testutil.ExpectPassesRule(t, graphql.NoUnusedFragmentsRule, `
       query Foo {
@@ -54,6 +55,7 @@ func TestValidate_NoUnusedFragments_AllFragmentNamesAreUsedByMultipleOperations(
       }
     `)
 }
+
 func TestValidate_NoUnusedFragments_ContainsUnknownFragments(t *testing.T) {
 	testutil.ExpectFailsRule(t, graphql.NoUnusedFragmentsRule, `
       query Foo {
@@ -87,6 +89,7 @@ func TestValidate_NoUnusedFragments_ContainsUnknownFragments(t *testing.T) {
 		testutil.RuleError(`Fragment "Unused2" is never used.`, 25, 7),
 	})
 }
+
 func TestValidate_NoUnusedFragments_ContainsUnknownFragmentsWithRefCycle(t *testing.T) {
 	testutil.ExpectFailsRule(t, graphql.NoUnusedFragmentsRule, `
       query Foo {
@@ -122,6 +125,7 @@ func TestValidate_NoUnusedFragments_ContainsUnknownFragmentsWithRefCycle(t *test
 		testutil.RuleError(`Fragment "Unused2" is never used.`, 26, 7),
 	})
 }
+
 func TestValidate_NoUnusedFragments_ContainsUnknownAndUndefFragments(t *testing.T) {
 	testutil.ExpectFailsRule(t, graphql.NoUnusedFragmentsRule, `
       query Foo {

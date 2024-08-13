@@ -1,7 +1,7 @@
 package ast
 
 import (
-	"github.com/graphql-go/graphql/language/kinds"
+	"github.com/fraym/graphql-go/language/kinds"
 )
 
 type Type interface {
@@ -11,9 +11,11 @@ type Type interface {
 }
 
 // Ensure that all value types implements Value interface
-var _ Type = (*Named)(nil)
-var _ Type = (*List)(nil)
-var _ Type = (*NonNull)(nil)
+var (
+	_ Type = (*Named)(nil)
+	_ Type = (*List)(nil)
+	_ Type = (*NonNull)(nil)
+)
 
 // Named implements Node, Type
 type Named struct {

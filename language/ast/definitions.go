@@ -1,7 +1,7 @@
 package ast
 
 import (
-	"github.com/graphql-go/graphql/language/kinds"
+	"github.com/fraym/graphql-go/language/kinds"
 )
 
 type Definition interface {
@@ -13,9 +13,11 @@ type Definition interface {
 }
 
 // Ensure that all definition types implements Definition interface
-var _ Definition = (*OperationDefinition)(nil)
-var _ Definition = (*FragmentDefinition)(nil)
-var _ Definition = (TypeSystemDefinition)(nil) // experimental non-spec addition.
+var (
+	_ Definition = (*OperationDefinition)(nil)
+	_ Definition = (*FragmentDefinition)(nil)
+	_ Definition = (TypeSystemDefinition)(nil) // experimental non-spec addition.
+)
 
 // Note: subscription is an experimental non-spec addition.
 const (

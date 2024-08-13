@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/graphql-go/graphql"
+	"github.com/fraym/graphql-go"
 )
 
 type intSerializationTest struct {

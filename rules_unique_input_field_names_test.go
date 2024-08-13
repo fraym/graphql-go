@@ -3,9 +3,9 @@ package graphql_test
 import (
 	"testing"
 
-	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/graphql/gqlerrors"
-	"github.com/graphql-go/graphql/testutil"
+	"github.com/fraym/graphql-go"
+	"github.com/fraym/graphql-go/gqlerrors"
+	"github.com/fraym/graphql-go/testutil"
 )
 
 func TestValidate_UniqueInputFieldNames_InputObjectWithFields(t *testing.T) {
@@ -15,6 +15,7 @@ func TestValidate_UniqueInputFieldNames_InputObjectWithFields(t *testing.T) {
       }
     `)
 }
+
 func TestValidate_UniqueInputFieldNames_SameInputObjectWithinTwoArgs(t *testing.T) {
 	testutil.ExpectPassesRule(t, graphql.UniqueInputFieldNamesRule, `
       {
@@ -22,6 +23,7 @@ func TestValidate_UniqueInputFieldNames_SameInputObjectWithinTwoArgs(t *testing.
       }
     `)
 }
+
 func TestValidate_UniqueInputFieldNames_MultipleInputObjectFields(t *testing.T) {
 	testutil.ExpectPassesRule(t, graphql.UniqueInputFieldNamesRule, `
       {
@@ -29,6 +31,7 @@ func TestValidate_UniqueInputFieldNames_MultipleInputObjectFields(t *testing.T) 
       }
     `)
 }
+
 func TestValidate_UniqueInputFieldNames_AllowsForNestedInputObjectsWithSimilarFields(t *testing.T) {
 	testutil.ExpectPassesRule(t, graphql.UniqueInputFieldNamesRule, `
       {
@@ -44,6 +47,7 @@ func TestValidate_UniqueInputFieldNames_AllowsForNestedInputObjectsWithSimilarFi
       }
     `)
 }
+
 func TestValidate_UniqueInputFieldNames_DuplicateInputObjectFields(t *testing.T) {
 	testutil.ExpectFailsRule(t, graphql.UniqueInputFieldNamesRule, `
       {
@@ -53,6 +57,7 @@ func TestValidate_UniqueInputFieldNames_DuplicateInputObjectFields(t *testing.T)
 		testutil.RuleError(`There can be only one input field named "f1".`, 3, 22, 3, 35),
 	})
 }
+
 func TestValidate_UniqueInputFieldNames_ManyDuplicateInputObjectFields(t *testing.T) {
 	testutil.ExpectFailsRule(t, graphql.UniqueInputFieldNamesRule, `
       {

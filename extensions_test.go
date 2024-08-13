@@ -7,9 +7,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/graphql/gqlerrors"
-	"github.com/graphql-go/graphql/testutil"
+	"github.com/fraym/graphql-go"
+	"github.com/fraym/graphql-go/gqlerrors"
+	"github.com/fraym/graphql-go/testutil"
 )
 
 func tinit(t *testing.T) graphql.Schema {

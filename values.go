@@ -8,10 +8,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/graphql-go/graphql/gqlerrors"
-	"github.com/graphql-go/graphql/language/ast"
-	"github.com/graphql-go/graphql/language/kinds"
-	"github.com/graphql-go/graphql/language/printer"
+	"github.com/fraym/graphql-go/gqlerrors"
+	"github.com/fraym/graphql-go/language/ast"
+	"github.com/fraym/graphql-go/language/kinds"
+	"github.com/fraym/graphql-go/language/printer"
 )
 
 // Used to detect the difference between a "null" literal and not present
