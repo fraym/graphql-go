@@ -1,7 +1,7 @@
 package printer_test
 
 import (
-	"io/ioutil"
+	"os"
 	"reflect"
 	"testing"
 
@@ -24,7 +24,7 @@ func TestSchemaPrinter_PrintsMinimalAST(t *testing.T) {
 }
 
 func TestSchemaPrinter_DoesNotAlterAST(t *testing.T) {
-	b, err := ioutil.ReadFile("../../schema-kitchen-sink.graphql")
+	b, err := os.ReadFile("../../schema-kitchen-sink.graphql")
 	if err != nil {
 		t.Fatalf("unable to load schema-kitchen-sink.graphql")
 	}
@@ -46,7 +46,7 @@ func TestSchemaPrinter_DoesNotAlterAST(t *testing.T) {
 }
 
 func TestSchemaPrinter_PrintsKitchenSink(t *testing.T) {
-	b, err := ioutil.ReadFile("../../schema-kitchen-sink.graphql")
+	b, err := os.ReadFile("../../schema-kitchen-sink.graphql")
 	if err != nil {
 		t.Fatalf("unable to load schema-kitchen-sink.graphql")
 	}
@@ -126,7 +126,7 @@ directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
 }
 
 func TestSchemaPrinter_PrintsAllDescriptions(t *testing.T) {
-	b, err := ioutil.ReadFile("../../schema-all-descriptions.graphql")
+	b, err := os.ReadFile("../../schema-all-descriptions.graphql")
 	if err != nil {
 		t.Fatalf("unable to load schema-all-descriptions.graphql")
 	}
