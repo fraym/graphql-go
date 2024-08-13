@@ -54,12 +54,12 @@ var rootMutation = graphql.NewObject(graphql.ObjectConfig{
 			Type:        todoType, // the return type for this field
 			Description: "Create new todo",
 			Args: graphql.FieldConfigArgument{
-				"text": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "text",
 					Type: graphql.NewNonNull(graphql.String),
 				},
 			},
 			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-
 				// marshall and cast the argument value
 				text, _ := params.Args["text"].(string)
 
@@ -91,10 +91,12 @@ var rootMutation = graphql.NewObject(graphql.ObjectConfig{
 			Type:        todoType, // the return type for this field
 			Description: "Update existing todo, mark it done or not done",
 			Args: graphql.FieldConfigArgument{
-				"done": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "done",
 					Type: graphql.Boolean,
 				},
-				"id": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "id",
 					Type: graphql.NewNonNull(graphql.String),
 				},
 			},
@@ -127,7 +129,6 @@ var rootMutation = graphql.NewObject(graphql.ObjectConfig{
 var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 	Name: "RootQuery",
 	Fields: graphql.Fields{
-
 		/*
 		   curl -g 'http://localhost:8080/graphql?query={todo(id:"b"){id,text,done}}'
 		*/
@@ -135,12 +136,12 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 			Type:        todoType,
 			Description: "Get single todo",
 			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "id",
 					Type: graphql.String,
 				},
 			},
 			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-
 				idQuery, isOK := params.Args["id"].(string)
 				if isOK {
 					// Search for el with id

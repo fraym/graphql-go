@@ -4,9 +4,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"log"
+
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/graphql/language/ast"
-	"log"
 )
 
 // NullString to be used in place of sql.NullString
@@ -128,17 +129,18 @@ func main() {
 				"people": &graphql.Field{
 					Type: graphql.NewList(PersonType),
 					Args: graphql.FieldConfigArgument{
-						"favorite_dog": &graphql.ArgumentConfig{
+						&graphql.ArgumentConfig{
+							Name: "favorite_dog",
 							Type: NullableString,
 						},
 					},
 					Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 						dog, dogOk := p.Args["favorite_dog"].(*NullString)
 						people := []Person{
-							Person{Name: "Alice", FavoriteDog: NewNullString("Yorkshire Terrier")},
+							{Name: "Alice", FavoriteDog: NewNullString("Yorkshire Terrier")},
 							// `Bob`'s favorite dog will be saved as null in the database
-							Person{Name: "Bob", FavoriteDog: NewNullString("")},
-							Person{Name: "Chris", FavoriteDog: NewNullString("French Bulldog")},
+							{Name: "Bob", FavoriteDog: NewNullString("")},
+							{Name: "Chris", FavoriteDog: NewNullString("French Bulldog")},
 						}
 						switch {
 						case dogOk:
@@ -198,7 +200,6 @@ query {
 	b2, err := json.MarshalIndent(r2, "", "  ")
 	if err != nil {
 		log.Fatal(err)
-
 	}
 	fmt.Printf("\nQuery: %+v\n", string(query))
 	fmt.Printf("\nResult: %+v\n", string(b1))

@@ -564,8 +564,8 @@ func defineFieldMap(ttype Named, fieldMap Fields) (FieldDefinitionMap, error) {
 		}
 
 		fieldDef.Args = []*Argument{}
-		for argName, arg := range field.Args {
-			if err = assertValidName(argName); err != nil {
+		for _, arg := range field.Args {
+			if err = assertValidName(arg.Name); err != nil {
 				return resultFieldMap, err
 			}
 			if err = invariantf(
@@ -576,12 +576,12 @@ func defineFieldMap(ttype Named, fieldMap Fields) (FieldDefinitionMap, error) {
 			}
 			if err = invariantf(
 				arg.Type != nil,
-				`%v.%v(%v:) argument type must be Input Type but got: %v.`, ttype, fieldName, argName, arg.Type,
+				`%v.%v(%v:) argument type must be Input Type but got: %v.`, ttype, fieldName, arg.Name, arg.Type,
 			); err != nil {
 				return resultFieldMap, err
 			}
 			fieldArg := &Argument{
-				PrivateName:        argName,
+				PrivateName:        arg.Name,
 				PrivateDescription: arg.Description,
 				Type:               arg.Type,
 				DefaultValue:       arg.DefaultValue,
@@ -637,9 +637,10 @@ type Field struct {
 	Description       string              `json:"description"`
 }
 
-type FieldConfigArgument map[string]*ArgumentConfig
+type FieldConfigArgument []*ArgumentConfig
 
 type ArgumentConfig struct {
+	Name         string      `json:"name"`
 	Type         Input       `json:"type"`
 	DefaultValue interface{} `json:"defaultValue"`
 	Description  string      `json:"description"`

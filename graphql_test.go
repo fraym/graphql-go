@@ -165,7 +165,10 @@ func TestThreadsContextFromParamsThrough(t *testing.T) {
 				"value": &graphql.Field{
 					Type: graphql.String,
 					Args: graphql.FieldConfigArgument{
-						"key": &graphql.ArgumentConfig{Type: graphql.String},
+						&graphql.ArgumentConfig{
+							Name: "key",
+							Type: graphql.String,
+						},
 					},
 					Resolve: extractFieldFromContextFn,
 				},
@@ -238,7 +241,10 @@ func TestEmptyStringIsNotNull(t *testing.T) {
 				"checkEmptyArg": &graphql.Field{
 					Type: graphql.String,
 					Args: graphql.FieldConfigArgument{
-						"arg": &graphql.ArgumentConfig{Type: graphql.String},
+						&graphql.ArgumentConfig{
+							Name: "arg",
+							Type: graphql.String,
+						},
 					},
 					Resolve: checkForEmptyString,
 				},

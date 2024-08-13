@@ -165,15 +165,16 @@ func extractTag(tag reflect.StructTag) string {
 // lazy way of binding args
 func BindArg(obj interface{}, tags ...string) FieldConfigArgument {
 	v := reflect.Indirect(reflect.ValueOf(obj))
-	config := make(FieldConfigArgument)
+	var config FieldConfigArgument
 	for i := 0; i < v.NumField(); i++ {
 		field := v.Type().Field(i)
 
 		mytag := extractTag(field.Tag)
 		if inArray(tags, mytag) {
-			config[mytag] = &ArgumentConfig{
+			config = append(config, &ArgumentConfig{
+				Name: mytag,
 				Type: getGraphType(field.Type),
-			}
+			})
 		}
 	}
 	return config

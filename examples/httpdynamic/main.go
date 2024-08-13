@@ -72,26 +72,27 @@ func importJSONDataFromFile(fileName string) error {
 	}
 
 	fields := make(graphql.Fields)
-	args := make(graphql.FieldConfigArgument)
+	var args graphql.FieldConfigArgument
 	for _, item := range data {
 		for k := range item {
 			fields[k] = &graphql.Field{
 				Type: graphql.String,
 			}
-			args[k] = &graphql.ArgumentConfig{
+			args = append(args, &graphql.ArgumentConfig{
+				Name: k,
 				Type: graphql.String,
-			}
+			})
 		}
 	}
 
-	var userType = graphql.NewObject(
+	userType := graphql.NewObject(
 		graphql.ObjectConfig{
 			Name:   "User",
 			Fields: fields,
 		},
 	)
 
-	var queryType = graphql.NewObject(
+	queryType := graphql.NewObject(
 		graphql.ObjectConfig{
 			Name: "Query",
 			Fields: graphql.Fields{

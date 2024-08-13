@@ -36,10 +36,12 @@ var blogAuthor = graphql.NewObject(graphql.ObjectConfig{
 		"pic": &graphql.Field{
 			Type: blogImage,
 			Args: graphql.FieldConfigArgument{
-				"width": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "width",
 					Type: graphql.Int,
 				},
-				"height": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "height",
 					Type: graphql.Int,
 				},
 			},
@@ -75,7 +77,8 @@ var blogQuery = graphql.NewObject(graphql.ObjectConfig{
 		"article": &graphql.Field{
 			Type: blogArticle,
 			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "id",
 					Type: graphql.String,
 				},
 			},
@@ -92,7 +95,8 @@ var blogMutation = graphql.NewObject(graphql.ObjectConfig{
 		"writeArticle": &graphql.Field{
 			Type: blogArticle,
 			Args: graphql.FieldConfigArgument{
-				"title": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "title",
 					Type: graphql.String,
 				},
 			},
@@ -106,7 +110,8 @@ var blogSubscription = graphql.NewObject(graphql.ObjectConfig{
 		"articleSubscribe": &graphql.Field{
 			Type: blogArticle,
 			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "id",
 					Type: graphql.String,
 				},
 			},
@@ -306,7 +311,8 @@ func TestTypeSystem_DefinitionExample_IncludesNestedInputObjectsInTheMap(t *test
 			"mutateSomething": &graphql.Field{
 				Type: blogArticle,
 				Args: graphql.FieldConfigArgument{
-					"input": &graphql.ArgumentConfig{
+					&graphql.ArgumentConfig{
+						Name: "input",
 						Type: someInputObject,
 					},
 				},
@@ -319,7 +325,8 @@ func TestTypeSystem_DefinitionExample_IncludesNestedInputObjectsInTheMap(t *test
 			"subscribeToSomething": &graphql.Field{
 				Type: blogArticle,
 				Args: graphql.FieldConfigArgument{
-					"input": &graphql.ArgumentConfig{
+					&graphql.ArgumentConfig{
+						Name: "input",
 						Type: someInputObject,
 					},
 				},
@@ -539,7 +546,8 @@ func TestTypeSystem_DefinitionExample_DoesNotMutatePassedFieldDefinitions(t *tes
 		"field2": &graphql.Field{
 			Type: graphql.String,
 			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "id",
 					Type: graphql.String,
 				},
 			},
@@ -564,7 +572,8 @@ func TestTypeSystem_DefinitionExample_DoesNotMutatePassedFieldDefinitions(t *tes
 		"field2": &graphql.Field{
 			Type: graphql.String,
 			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "id",
 					Type: graphql.String,
 				},
 			},

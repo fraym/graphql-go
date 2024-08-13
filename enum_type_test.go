@@ -24,19 +24,23 @@ var enumTypeTestColorType = graphql.NewEnum(graphql.EnumConfig{
 		},
 	},
 })
+
 var enumTypeTestQueryType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Query",
 	Fields: graphql.Fields{
 		"colorEnum": &graphql.Field{
 			Type: enumTypeTestColorType,
 			Args: graphql.FieldConfigArgument{
-				"fromEnum": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "fromEnum",
 					Type: enumTypeTestColorType,
 				},
-				"fromInt": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "fromInt",
 					Type: graphql.Int,
 				},
-				"fromString": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "fromString",
 					Type: graphql.String,
 				},
 			},
@@ -56,10 +60,12 @@ var enumTypeTestQueryType = graphql.NewObject(graphql.ObjectConfig{
 		"colorInt": &graphql.Field{
 			Type: graphql.Int,
 			Args: graphql.FieldConfigArgument{
-				"fromEnum": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "fromEnum",
 					Type: enumTypeTestColorType,
 				},
-				"fromInt": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "fromInt",
 					Type: graphql.Int,
 				},
 			},
@@ -75,13 +81,15 @@ var enumTypeTestQueryType = graphql.NewObject(graphql.ObjectConfig{
 		},
 	},
 })
+
 var enumTypeTestMutationType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Mutation",
 	Fields: graphql.Fields{
 		"favoriteEnum": &graphql.Field{
 			Type: enumTypeTestColorType,
 			Args: graphql.FieldConfigArgument{
-				"color": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "color",
 					Type: enumTypeTestColorType,
 				},
 			},
@@ -101,7 +109,8 @@ var enumTypeTestSubscriptionType = graphql.NewObject(graphql.ObjectConfig{
 		"subscribeToEnum": &graphql.Field{
 			Type: enumTypeTestColorType,
 			Args: graphql.FieldConfigArgument{
-				"color": &graphql.ArgumentConfig{
+				&graphql.ArgumentConfig{
+					Name: "color",
 					Type: enumTypeTestColorType,
 				},
 			},
@@ -128,6 +137,7 @@ func executeEnumTypeTest(t *testing.T, query string) *graphql.Result {
 	})
 	return result
 }
+
 func executeEnumTypeTestWithParams(t *testing.T, query string, params map[string]interface{}) *graphql.Result {
 	result := g(t, graphql.Params{
 		Schema:         enumTypeTestSchema,
@@ -136,6 +146,7 @@ func executeEnumTypeTestWithParams(t *testing.T, query string, params map[string
 	})
 	return result
 }
+
 func TestTypeSystem_EnumValues_AcceptsEnumLiteralsAsInput(t *testing.T) {
 	query := "{ colorInt(fromEnum: GREEN) }"
 	expected := &graphql.Result{
@@ -161,6 +172,7 @@ func TestTypeSystem_EnumValues_EnumMayBeOutputType(t *testing.T) {
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
 }
+
 func TestTypeSystem_EnumValues_EnumMayBeBothInputAndOutputType(t *testing.T) {
 	query := "{ colorEnum(fromEnum: GREEN) }"
 	expected := &graphql.Result{
@@ -173,6 +185,7 @@ func TestTypeSystem_EnumValues_EnumMayBeBothInputAndOutputType(t *testing.T) {
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
 }
+
 func TestTypeSystem_EnumValues_DoesNotAcceptStringLiterals(t *testing.T) {
 	query := `{ colorEnum(fromEnum: "GREEN") }`
 	expected := &graphql.Result{
@@ -191,6 +204,7 @@ func TestTypeSystem_EnumValues_DoesNotAcceptStringLiterals(t *testing.T) {
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
 }
+
 func TestTypeSystem_EnumValues_DoesNotAcceptIncorrectInternalValue(t *testing.T) {
 	query := `{ colorEnum(fromString: "GREEN") }`
 	expected := &graphql.Result{
@@ -203,6 +217,7 @@ func TestTypeSystem_EnumValues_DoesNotAcceptIncorrectInternalValue(t *testing.T)
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
 }
+
 func TestTypeSystem_EnumValues_DoesNotAcceptInternalValueInPlaceOfEnumLiteral(t *testing.T) {
 	query := `{ colorEnum(fromEnum: 1) }`
 	expected := &graphql.Result{
@@ -288,6 +303,7 @@ func TestTypeSystem_EnumValues_AcceptsEnumLiteralsAsInputArgumentsToSubscription
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
 }
+
 func TestTypeSystem_EnumValues_DoesNotAcceptInternalValueAsEnumVariable(t *testing.T) {
 	query := `query test($color: Color!) { colorEnum(fromEnum: $color) }`
 	params := map[string]interface{}{
@@ -309,6 +325,7 @@ func TestTypeSystem_EnumValues_DoesNotAcceptInternalValueAsEnumVariable(t *testi
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
 }
+
 func TestTypeSystem_EnumValues_DoesNotAcceptStringVariablesAsEnumInput(t *testing.T) {
 	query := `query test($color: String!) { colorEnum(fromEnum: $color) }`
 	params := map[string]interface{}{
@@ -327,6 +344,7 @@ func TestTypeSystem_EnumValues_DoesNotAcceptStringVariablesAsEnumInput(t *testin
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
 }
+
 func TestTypeSystem_EnumValues_DoesNotAcceptInternalValueVariableAsEnumInput(t *testing.T) {
 	query := `query test($color: Int!) { colorEnum(fromEnum: $color) }`
 	params := map[string]interface{}{
@@ -345,6 +363,7 @@ func TestTypeSystem_EnumValues_DoesNotAcceptInternalValueVariableAsEnumInput(t *
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
 }
+
 func TestTypeSystem_EnumValues_EnumValueMayHaveAnInternalValueOfZero(t *testing.T) {
 	query := `{
         colorEnum(fromEnum: RED)
@@ -361,6 +380,7 @@ func TestTypeSystem_EnumValues_EnumValueMayHaveAnInternalValueOfZero(t *testing.
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
 }
+
 func TestTypeSystem_EnumValues_EnumValueMayBeNullable(t *testing.T) {
 	query := `{
         colorEnum
@@ -379,7 +399,7 @@ func TestTypeSystem_EnumValues_EnumValueMayBeNullable(t *testing.T) {
 }
 
 func TestTypeSystem_EnumValues_EnumValueMayBePointer(t *testing.T) {
-	var enumTypeTestSchema, _ = graphql.NewSchema(graphql.SchemaConfig{
+	enumTypeTestSchema, _ := graphql.NewSchema(graphql.SchemaConfig{
 		Query: graphql.NewObject(graphql.ObjectConfig{
 			Name: "Query",
 			Fields: graphql.Fields{
@@ -412,7 +432,10 @@ func TestTypeSystem_EnumValues_EnumValueMayBePointer(t *testing.T) {
 		Data: map[string]interface{}{
 			"query": map[string]interface{}{
 				"color": "GREEN",
-				"foo":   1}}}
+				"foo":   1,
+			},
+		},
+	}
 	result := g(t, graphql.Params{
 		Schema:        enumTypeTestSchema,
 		RequestString: query,
@@ -423,7 +446,7 @@ func TestTypeSystem_EnumValues_EnumValueMayBePointer(t *testing.T) {
 }
 
 func TestTypeSystem_EnumValues_EnumValueMayBeNilPointer(t *testing.T) {
-	var enumTypeTestSchema, _ = graphql.NewSchema(graphql.SchemaConfig{
+	enumTypeTestSchema, _ := graphql.NewSchema(graphql.SchemaConfig{
 		Query: graphql.NewObject(graphql.ObjectConfig{
 			Name: "Query",
 			Fields: graphql.Fields{
@@ -450,7 +473,8 @@ func TestTypeSystem_EnumValues_EnumValueMayBeNilPointer(t *testing.T) {
 		Data: map[string]interface{}{
 			"query": map[string]interface{}{
 				"color": nil,
-			}},
+			},
+		},
 	}
 	result := g(t, graphql.Params{
 		Schema:        enumTypeTestSchema,

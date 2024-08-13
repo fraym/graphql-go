@@ -79,7 +79,8 @@ func main() {
 				"customers": &graphql.Field{
 					Type: graphql.NewList(CustomerType),
 					Args: graphql.FieldConfigArgument{
-						"id": &graphql.ArgumentConfig{
+						&graphql.ArgumentConfig{
+							Name: "id",
 							Type: CustomScalarType,
 						},
 					},
@@ -87,7 +88,7 @@ func main() {
 						// id := p.Args["id"]
 						// log.Printf("id from arguments: %+v", id)
 						customers := []Customer{
-							Customer{ID: NewCustomID("fb278f2a4a13f")},
+							{ID: NewCustomID("fb278f2a4a13f")},
 						}
 						return customers, nil
 					},
