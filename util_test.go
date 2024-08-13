@@ -42,7 +42,7 @@ var personSource = Person{
 		Age:    24,
 		Weight: 70.1,
 		Alive:  true,
-		DoB:    time.Date(2019, 01, 01, 01, 01, 01, 0, time.UTC),
+		DoB:    time.Date(2019, 0o1, 0o1, 0o1, 0o1, 0o1, 0, time.UTC),
 	},
 	Name: "John Doe",
 	Home: Address{
@@ -68,7 +68,7 @@ func TestBindFields(t *testing.T) {
 	fields := graphql.Fields{
 		"person": &graphql.Field{
 			Type: personType,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+			Resolve: func(p graphql.ResolveParams) (any, error) {
 				return personSource, nil
 			},
 		},
@@ -119,7 +119,7 @@ func TestBindFields(t *testing.T) {
 }
 
 func TestBindArg(t *testing.T) {
-	var friendObj = graphql.NewObject(graphql.ObjectConfig{
+	friendObj := graphql.NewObject(graphql.ObjectConfig{
 		Name:   "friend",
 		Fields: graphql.BindFields(Friend{}),
 	})
@@ -127,9 +127,9 @@ func TestBindArg(t *testing.T) {
 	fields := graphql.Fields{
 		"friend": &graphql.Field{
 			Type: friendObj,
-			//it can be added more than one since it's a slice
+			// it can be added more than one since it's a slice
 			Args: graphql.BindArg(Friend{}, "name"),
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+			Resolve: func(p graphql.ResolveParams) (any, error) {
 				if name, ok := p.Args["name"].(string); ok {
 					for _, friend := range friendSource {
 						if friend.Name == name {

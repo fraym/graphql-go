@@ -9,7 +9,7 @@ import (
 
 type Test struct {
 	Body     string
-	Expected interface{}
+	Expected any
 }
 
 func createSource(body string) *source.Source {
@@ -60,7 +60,6 @@ func TestLexer_GetTokenDesc(t *testing.T) {
 	if expected != tokenDescription {
 		t.Errorf("Expected %v, got %v", expected, tokenDescription)
 	}
-
 }
 
 func TestLexer_DisallowsUncommonControlCharacters(t *testing.T) {

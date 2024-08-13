@@ -11,6 +11,7 @@ godoc: https://pkg.go.dev/github.com/graphql-go/graphql
 ### Getting Started
 
 To install the library, run:
+
 ```bash
 go get github.com/graphql-go/graphql
 ```
@@ -33,7 +34,7 @@ func main() {
 	fields := graphql.Fields{
 		"hello": &graphql.Field{
 			Type: graphql.String,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+			Resolve: func(p graphql.ResolveParams) (any, error) {
 				return "world", nil
 			},
 		},
@@ -60,16 +61,18 @@ func main() {
 	fmt.Printf("%s \n", rJSON) // {"data":{"hello":"world"}}
 }
 ```
+
 For more complex examples, refer to the [examples/](https://github.com/graphql-go/graphql/tree/master/examples/) directory and [graphql_test.go](https://github.com/graphql-go/graphql/blob/master/graphql_test.go).
 
 ### Third Party Libraries
-| Name          | Author        | Description  |
-|:-------------:|:-------------:|:------------:|
-| [graphql-go-handler](https://github.com/graphql-go/graphql-go-handler) | [Hafiz Ismail](https://github.com/sogko) | Middleware to handle GraphQL queries through HTTP requests. |
-| [graphql-relay-go](https://github.com/graphql-go/graphql-relay-go) | [Hafiz Ismail](https://github.com/sogko) | Lib to construct a graphql-go server supporting react-relay. |
-| [golang-relay-starter-kit](https://github.com/sogko/golang-relay-starter-kit) | [Hafiz Ismail](https://github.com/sogko) | Barebones starting point for a Relay application with Golang GraphQL server. |
-| [dataloader](https://github.com/nicksrandall/dataloader) | [Nick Randall](https://github.com/nicksrandall) | [DataLoader](https://github.com/facebook/dataloader) implementation in Go. |
+
+|                                     Name                                      |                     Author                      |                                 Description                                  |
+| :---------------------------------------------------------------------------: | :---------------------------------------------: | :--------------------------------------------------------------------------: |
+|    [graphql-go-handler](https://github.com/graphql-go/graphql-go-handler)     |    [Hafiz Ismail](https://github.com/sogko)     |         Middleware to handle GraphQL queries through HTTP requests.          |
+|      [graphql-relay-go](https://github.com/graphql-go/graphql-relay-go)       |    [Hafiz Ismail](https://github.com/sogko)     |         Lib to construct a graphql-go server supporting react-relay.         |
+| [golang-relay-starter-kit](https://github.com/sogko/golang-relay-starter-kit) |    [Hafiz Ismail](https://github.com/sogko)     | Barebones starting point for a Relay application with Golang GraphQL server. |
+|           [dataloader](https://github.com/nicksrandall/dataloader)            | [Nick Randall](https://github.com/nicksrandall) |  [DataLoader](https://github.com/facebook/dataloader) implementation in Go.  |
 
 ### Blog Posts
-- [Golang + GraphQL + Relay](https://wehavefaces.net/learn-golang-graphql-relay-1-e59ea174a902)
 
+- [Golang + GraphQL + Relay](https://wehavefaces.net/learn-golang-graphql-relay-1-e59ea174a902)

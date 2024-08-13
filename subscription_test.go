@@ -10,7 +10,6 @@ import (
 )
 
 func TestSchemaSubscribe(t *testing.T) {
-
 	testutil.RunSubscribes(t, []*testutil.TestSubscription{
 		{
 			Name: "subscribe without resolver",
@@ -19,7 +18,7 @@ func TestSchemaSubscribe(t *testing.T) {
 				Fields: graphql.Fields{
 					"sub_without_resolver": &graphql.Field{
 						Type: graphql.String,
-						Subscribe: makeSubscribeToMapFunction([]map[string]interface{}{
+						Subscribe: makeSubscribeToMapFunction([]map[string]any{
 							{
 								"sub_without_resolver": "a",
 							},
@@ -51,7 +50,7 @@ func TestSchemaSubscribe(t *testing.T) {
 				Fields: graphql.Fields{
 					"sub_with_resolver": &graphql.Field{
 						Type: graphql.String,
-						Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+						Resolve: func(p graphql.ResolveParams) (any, error) {
 							return p.Source, nil
 						},
 						Subscribe: makeSubscribeToStringFunction([]string{"a", "b", "c"}),
@@ -97,7 +96,7 @@ func TestSchemaSubscribe(t *testing.T) {
 				Fields: graphql.Fields{
 					"should_error": &graphql.Field{
 						Type: graphql.String,
-						Subscribe: func(p graphql.ResolveParams) (interface{}, error) {
+						Subscribe: func(p graphql.ResolveParams) (any, error) {
 							panic(errors.New("got a panic error"))
 						},
 					},
@@ -120,7 +119,7 @@ func TestSchemaSubscribe(t *testing.T) {
 					"sub_with_resolver": &graphql.Field{
 						Type:      graphql.String,
 						Subscribe: makeSubscribeToStringFunction([]string{"a", "b", "c", "d"}),
-						Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+						Resolve: func(p graphql.ResolveParams) (any, error) {
 							return fmt.Sprintf("result=%v", p.Source), nil
 						},
 					},
@@ -152,10 +151,10 @@ func TestSchemaSubscribe(t *testing.T) {
 								},
 							},
 						}),
-						Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+						Resolve: func(p graphql.ResolveParams) (any, error) {
 							return p.Source, nil
 						},
-						Subscribe: makeSubscribeToMapFunction([]map[string]interface{}{
+						Subscribe: makeSubscribeToMapFunction([]map[string]any{
 							{
 								"field": "hello",
 							},
@@ -190,7 +189,7 @@ func TestSchemaSubscribe(t *testing.T) {
 				Fields: graphql.Fields{
 					"should_error": &graphql.Field{
 						Type: graphql.String,
-						Subscribe: func(p graphql.ResolveParams) (interface{}, error) {
+						Subscribe: func(p graphql.ResolveParams) (any, error) {
 							return nil, errors.New("got a subscribe error")
 						},
 					},
@@ -231,9 +230,9 @@ func TestSchemaSubscribe(t *testing.T) {
 	})
 }
 
-func makeSubscribeToStringFunction(elements []string) func(p graphql.ResolveParams) (interface{}, error) {
-	return func(p graphql.ResolveParams) (interface{}, error) {
-		c := make(chan interface{})
+func makeSubscribeToStringFunction(elements []string) func(p graphql.ResolveParams) (any, error) {
+	return func(p graphql.ResolveParams) (any, error) {
+		c := make(chan any)
 		go func() {
 			for _, r := range elements {
 				select {
@@ -249,9 +248,9 @@ func makeSubscribeToStringFunction(elements []string) func(p graphql.ResolvePara
 	}
 }
 
-func makeSubscribeToMapFunction(elements []map[string]interface{}) func(p graphql.ResolveParams) (interface{}, error) {
-	return func(p graphql.ResolveParams) (interface{}, error) {
-		c := make(chan interface{})
+func makeSubscribeToMapFunction(elements []map[string]any) func(p graphql.ResolveParams) (any, error) {
+	return func(p graphql.ResolveParams) (any, error) {
+		c := make(chan any)
 		go func() {
 			for _, r := range elements {
 				select {
@@ -281,7 +280,6 @@ func makeSubscriptionSchema(t *testing.T, c graphql.ObjectConfig) graphql.Schema
 var dummyQuery = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Query",
 	Fields: graphql.Fields{
-
 		"hello": &graphql.Field{Type: graphql.String},
 	},
 })

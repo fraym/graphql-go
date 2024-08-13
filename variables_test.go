@@ -14,19 +14,19 @@ import (
 
 var testComplexScalar *graphql.Scalar = graphql.NewScalar(graphql.ScalarConfig{
 	Name: "ComplexScalar",
-	Serialize: func(value interface{}) interface{} {
+	Serialize: func(value any) any {
 		if value == "DeserializedValue" {
 			return "SerializedValue"
 		}
 		return nil
 	},
-	ParseValue: func(value interface{}) interface{} {
+	ParseValue: func(value any) any {
 		if value == "SerializedValue" {
 			return "DeserializedValue"
 		}
 		return nil
 	},
-	ParseLiteral: func(valueAST ast.Value) interface{} {
+	ParseLiteral: func(valueAST ast.Value) any {
 		astValue := valueAST.GetValue()
 		if astValue, ok := astValue.(string); ok && astValue == "SerializedValue" {
 			return "DeserializedValue"
@@ -65,7 +65,7 @@ var testNestedInputObject *graphql.InputObject = graphql.NewInputObject(graphql.
 	},
 })
 
-func inputResolved(p graphql.ResolveParams) (interface{}, error) {
+func inputResolved(p graphql.ResolveParams) (any, error) {
 	input, ok := p.Args["input"]
 	if !ok || input == nil {
 		return nil, nil
@@ -186,7 +186,7 @@ func TestVariables_ObjectsAndNullability_UsingInlineStructs_ExecutesWithComplexI
         }
 	`
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithObjectInput": `{"a":"foo","b":["bar"],"c":"baz"}`,
 		},
 	}
@@ -214,7 +214,7 @@ func TestVariables_ObjectsAndNullability_UsingInlineStructs_ProperlyParsesSingle
         }
 	`
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithObjectInput": `{"a":"foo","b":["bar"],"c":"baz"}`,
 		},
 	}
@@ -242,7 +242,7 @@ func TestVariables_ObjectsAndNullability_UsingInlineStructs_DoesNotUseIncorrectV
         }
 	`
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithObjectInput": nil,
 		},
 	}
@@ -270,7 +270,7 @@ func TestVariables_ObjectsAndNullability_UsingInlineStructs_ProperlyRunsParseLit
         }
 	`
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithObjectInput": `{"a":"foo","d":"DeserializedValue"}`,
 		},
 	}
@@ -301,15 +301,15 @@ func testVariables_ObjectsAndNullability_UsingVariables_GetAST(t *testing.T) *as
 }
 
 func TestVariables_ObjectsAndNullability_UsingVariables_ExecutesWithComplexInput(t *testing.T) {
-	params := map[string]interface{}{
-		"input": map[string]interface{}{
+	params := map[string]any{
+		"input": map[string]any{
 			"a": "foo",
-			"b": []interface{}{"bar"},
+			"b": []any{"bar"},
 			"c": "baz",
 		},
 	}
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithObjectInput": `{"a":"foo","b":["bar"],"c":"baz"}`,
 		},
 	}
@@ -338,7 +338,7 @@ func TestVariables_ObjectsAndNullability_UsingVariables_UsesDefaultValueWhenNotP
 	  }
 	`
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithObjectInput": `{"a":"foo","b":["bar"],"c":"baz"}`,
 		},
 	}
@@ -360,15 +360,15 @@ func TestVariables_ObjectsAndNullability_UsingVariables_UsesDefaultValueWhenNotP
 }
 
 func TestVariables_ObjectsAndNullability_UsingVariables_ProperlyParsesSingleValueToList(t *testing.T) {
-	params := map[string]interface{}{
-		"input": map[string]interface{}{
+	params := map[string]any{
+		"input": map[string]any{
 			"a": "foo",
 			"b": "bar",
 			"c": "baz",
 		},
 	}
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithObjectInput": `{"a":"foo","b":["bar"],"c":"baz"}`,
 		},
 	}
@@ -391,14 +391,14 @@ func TestVariables_ObjectsAndNullability_UsingVariables_ProperlyParsesSingleValu
 }
 
 func TestVariables_ObjectsAndNullability_UsingVariables_ExecutesWithComplexScalarInput(t *testing.T) {
-	params := map[string]interface{}{
-		"input": map[string]interface{}{
+	params := map[string]any{
+		"input": map[string]any{
 			"c": "foo",
 			"d": "SerializedValue",
 		},
 	}
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithObjectInput": `{"c":"foo","d":"DeserializedValue"}`,
 		},
 	}
@@ -421,8 +421,8 @@ func TestVariables_ObjectsAndNullability_UsingVariables_ExecutesWithComplexScala
 }
 
 func TestVariables_ObjectsAndNullability_UsingVariables_ErrorsOnNullForNestedNonNull(t *testing.T) {
-	params := map[string]interface{}{
-		"input": map[string]interface{}{
+	params := map[string]any{
+		"input": map[string]any{
 			"a": "foo",
 			"b": "bar",
 			"c": nil,
@@ -458,7 +458,7 @@ func TestVariables_ObjectsAndNullability_UsingVariables_ErrorsOnNullForNestedNon
 }
 
 func TestVariables_ObjectsAndNullability_UsingVariables_ErrorsOnIncorrectType(t *testing.T) {
-	params := map[string]interface{}{
+	params := map[string]any{
 		"input": "foo bar",
 	}
 	expected := &graphql.Result{
@@ -490,8 +490,8 @@ func TestVariables_ObjectsAndNullability_UsingVariables_ErrorsOnIncorrectType(t 
 }
 
 func TestVariables_ObjectsAndNullability_UsingVariables_ErrorsOnOmissionOfNestedNonNull(t *testing.T) {
-	params := map[string]interface{}{
-		"input": map[string]interface{}{
+	params := map[string]any{
+		"input": map[string]any{
 			"a": "foo",
 			"b": "bar",
 		},
@@ -526,9 +526,9 @@ func TestVariables_ObjectsAndNullability_UsingVariables_ErrorsOnOmissionOfNested
 }
 
 func TestVariables_ObjectsAndNullability_UsingVariables_ErrorsOnDeepNestedErrorsAndWithManyErrors(t *testing.T) {
-	params := map[string]interface{}{
-		"input": map[string]interface{}{
-			"na": map[string]interface{}{
+	params := map[string]any{
+		"input": map[string]any{
+			"na": map[string]any{
 				"a": "foo",
 			},
 		},
@@ -569,8 +569,8 @@ func TestVariables_ObjectsAndNullability_UsingVariables_ErrorsOnDeepNestedErrors
 }
 
 func TestVariables_ObjectsAndNullability_UsingVariables_ErrorsOnAdditionOfUnknownInputField(t *testing.T) {
-	params := map[string]interface{}{
-		"input": map[string]interface{}{
+	params := map[string]any{
+		"input": map[string]any{
 			"a":     "foo",
 			"b":     "bar",
 			"c":     "baz",
@@ -613,7 +613,7 @@ func TestVariables_NullableScalars_AllowsNullableInputsToBeOmitted(t *testing.T)
       }
 	`
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithNullableStringInput": nil,
 		},
 	}
@@ -641,7 +641,7 @@ func TestVariables_NullableScalars_AllowsNullableInputsToBeOmittedInAVariable(t 
       }
 	`
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithNullableStringInput": nil,
 		},
 	}
@@ -669,7 +669,7 @@ func TestVariables_NullableScalars_AllowsNullableInputsToBeOmittedInAnUnlistedVa
       }
 	`
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithNullableStringInput": nil,
 		},
 	}
@@ -696,11 +696,11 @@ func TestVariables_NullableScalars_AllowsNullableInputsToBeSetToNullInAVariable(
         fieldWithNullableStringInput(input: $value)
       }
 	`
-	params := map[string]interface{}{
+	params := map[string]any{
 		"value": nil,
 	}
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithNullableStringInput": nil,
 		},
 	}
@@ -728,11 +728,11 @@ func TestVariables_NullableScalars_AllowsNullableInputsToBeSetToAValueInAVariabl
         fieldWithNullableStringInput(input: $value)
       }
 	`
-	params := map[string]interface{}{
+	params := map[string]any{
 		"value": "a",
 	}
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithNullableStringInput": `"a"`,
 		},
 	}
@@ -761,7 +761,7 @@ func TestVariables_NullableScalars_AllowsNullableInputsToBeSetToAValueDirectly(t
       }
 	`
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithNullableStringInput": `"a"`,
 		},
 	}
@@ -823,7 +823,7 @@ func TestVariables_NonNullableScalars_DoesNotAllowNonNullableInputsToBeSetToNull
         }
 	`
 
-	params := map[string]interface{}{
+	params := map[string]any{
 		"value": nil,
 	}
 	expected := &graphql.Result{
@@ -861,11 +861,11 @@ func TestVariables_NonNullableScalars_AllowsNonNullableInputsToBeSetToAValueInAV
         }
 	`
 
-	params := map[string]interface{}{
+	params := map[string]any{
 		"value": "a",
 	}
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithNonNullableStringInput": `"a"`,
 		},
 	}
@@ -894,12 +894,12 @@ func TestVariables_NonNullableScalars_AllowsNonNullableInputsToBeSetToAValueDire
       }
 	`
 
-	params := map[string]interface{}{
+	params := map[string]any{
 		"value": "a",
 	}
 
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithNonNullableStringInput": `"a"`,
 		},
 	}
@@ -928,12 +928,12 @@ func TestVariables_NonNullableScalars_PassesAlongNullForNonNullableInputsIfExpli
       }
 	`
 
-	params := map[string]interface{}{
+	params := map[string]any{
 		"value": "a",
 	}
 
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithNonNullableStringInput": nil,
 		},
 	}
@@ -961,12 +961,12 @@ func TestVariables_ListsAndNullability_AllowsListsToBeNull(t *testing.T) {
           list(input: $input)
         }
 	`
-	params := map[string]interface{}{
+	params := map[string]any{
 		"input": nil,
 	}
 
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"list": nil,
 		},
 	}
@@ -993,12 +993,12 @@ func TestVariables_ListsAndNullability_AllowsListsToContainValues(t *testing.T) 
           list(input: $input)
         }
 	`
-	params := map[string]interface{}{
-		"input": []interface{}{"A"},
+	params := map[string]any{
+		"input": []any{"A"},
 	}
 
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"list": `["A"]`,
 		},
 	}
@@ -1025,12 +1025,12 @@ func TestVariables_ListsAndNullability_AllowsListsToContainNull(t *testing.T) {
           list(input: $input)
         }
 	`
-	params := map[string]interface{}{
-		"input": []interface{}{"A", nil, "B"},
+	params := map[string]any{
+		"input": []any{"A", nil, "B"},
 	}
 
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"list": `["A",null,"B"]`,
 		},
 	}
@@ -1089,11 +1089,11 @@ func TestVariables_ListsAndNullability_AllowsNonNullListsToContainValues(t *test
           nnList(input: $input)
         }
 	`
-	params := map[string]interface{}{
-		"input": []interface{}{"A"},
+	params := map[string]any{
+		"input": []any{"A"},
 	}
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"nnList": `["A"]`,
 		},
 	}
@@ -1120,11 +1120,11 @@ func TestVariables_ListsAndNullability_AllowsNonNullListsToContainNull(t *testin
           nnList(input: $input)
         }
 	`
-	params := map[string]interface{}{
-		"input": []interface{}{"A", nil, "B"},
+	params := map[string]any{
+		"input": []any{"A", nil, "B"},
 	}
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"nnList": `["A",null,"B"]`,
 		},
 	}
@@ -1151,11 +1151,11 @@ func TestVariables_ListsAndNullability_AllowsListsOfNonNullsToBeNull(t *testing.
           listNN(input: $input)
         }
 	`
-	params := map[string]interface{}{
+	params := map[string]any{
 		"input": nil,
 	}
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"listNN": nil,
 		},
 	}
@@ -1182,11 +1182,11 @@ func TestVariables_ListsAndNullability_AllowsListsOfNonNullsToContainValues(t *t
           listNN(input: $input)
         }
 	`
-	params := map[string]interface{}{
-		"input": []interface{}{"A"},
+	params := map[string]any{
+		"input": []any{"A"},
 	}
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"listNN": `["A"]`,
 		},
 	}
@@ -1213,8 +1213,8 @@ func TestVariables_ListsAndNullability_DoesNotAllowListOfNonNullsToContainNull(t
           listNN(input: $input)
         }
 	`
-	params := map[string]interface{}{
-		"input": []interface{}{"A", nil, "B"},
+	params := map[string]any{
+		"input": []any{"A", nil, "B"},
 	}
 	expected := &graphql.Result{
 		Data: nil,
@@ -1251,7 +1251,7 @@ func TestVariables_ListsAndNullability_DoesNotAllowNonNullListOfNonNullsToBeNull
           nnListNN(input: $input)
         }
 	`
-	params := map[string]interface{}{
+	params := map[string]any{
 		"input": nil,
 	}
 	expected := &graphql.Result{
@@ -1287,11 +1287,11 @@ func TestVariables_ListsAndNullability_AllowsNonNullListsOfNonNulsToContainValue
           nnListNN(input: $input)
         }
 	`
-	params := map[string]interface{}{
-		"input": []interface{}{"A"},
+	params := map[string]any{
+		"input": []any{"A"},
 	}
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"nnListNN": `["A"]`,
 		},
 	}
@@ -1318,8 +1318,8 @@ func TestVariables_ListsAndNullability_DoesNotAllowNonNullListOfNonNullsToContai
           nnListNN(input: $input)
         }
 	`
-	params := map[string]interface{}{
-		"input": []interface{}{"A", nil, "B"},
+	params := map[string]any{
+		"input": []any{"A", nil, "B"},
 	}
 	expected := &graphql.Result{
 		Data: nil,
@@ -1356,9 +1356,9 @@ func TestVariables_ListsAndNullability_DoesNotAllowInvalidTypesToBeUsedAsValues(
           fieldWithObjectInput(input: $input)
         }
 	`
-	params := map[string]interface{}{
-		"input": map[string]interface{}{
-			"list": []interface{}{"A", "B"},
+	params := map[string]any{
+		"input": map[string]any{
+			"list": []any{"A", "B"},
 		},
 	}
 	expected := &graphql.Result{
@@ -1397,7 +1397,7 @@ func TestVariables_ListsAndNullability_DoesNotAllowUnknownTypesToBeUsedAsValues(
           fieldWithObjectInput(input: $input)
         }
 	`
-	params := map[string]interface{}{
+	params := map[string]any{
 		"input": "whoknows",
 	}
 	expected := &graphql.Result{
@@ -1434,7 +1434,7 @@ func TestVariables_UsesArgumentDefaultValues_WhenNoArgumentProvided(t *testing.T
     }
 	`
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithDefaultArgumentValue": `"Hello World"`,
 		},
 	}
@@ -1461,7 +1461,7 @@ func TestVariables_UsesArgumentDefaultValues_WhenNullableVariableProvided(t *tes
     }
 	`
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithDefaultArgumentValue": `"Hello World"`,
 		},
 	}
@@ -1488,7 +1488,7 @@ func TestVariables_UsesArgumentDefaultValues_WhenArgumentProvidedCannotBeParsed(
 	}
 	`
 	expected := &graphql.Result{
-		Data: map[string]interface{}{
+		Data: map[string]any{
 			"fieldWithDefaultArgumentValue": `"Hello World"`,
 		},
 	}

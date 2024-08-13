@@ -32,7 +32,7 @@ func handleSIGUSR1(c chan os.Signal) {
 	}
 }
 
-func filterUser(data []map[string]interface{}, args map[string]interface{}) map[string]interface{} {
+func filterUser(data []map[string]any, args map[string]any) map[string]any {
 	for _, user := range data {
 		for k, v := range args {
 			if user[k] != v {
@@ -63,7 +63,7 @@ func importJSONDataFromFile(fileName string) error {
 		return err
 	}
 
-	var data []map[string]interface{}
+	var data []map[string]any
 
 	err = json.Unmarshal(content, &data)
 	if err != nil {
@@ -98,7 +98,7 @@ func importJSONDataFromFile(fileName string) error {
 				"user": &graphql.Field{
 					Type: userType,
 					Args: args,
-					Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					Resolve: func(p graphql.ResolveParams) (any, error) {
 						return filterUser(data, p.Args), nil
 					},
 				},

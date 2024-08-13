@@ -13,9 +13,9 @@ import (
 type SubscribeParams struct {
 	Schema        Schema
 	RequestString string
-	RootValue     interface{}
+	RootValue     any
 	// ContextValue    context.Context
-	VariableValues  map[string]interface{}
+	VariableValues  map[string]any
 	OperationName   string
 	FieldResolver   FieldResolveFn
 	FieldSubscriber FieldResolveFn
@@ -74,7 +74,7 @@ func ExecuteSubscription(p ExecuteParams) chan *Result {
 		p.Context = context.Background()
 	}
 
-	mapSourceToResponse := func(payload interface{}) *Result {
+	mapSourceToResponse := func(payload any) *Result {
 		return Execute(ExecuteParams{
 			Schema:        p.Schema,
 			Root:          payload,
@@ -197,7 +197,7 @@ func ExecuteSubscription(p ExecuteParams) chan *Result {
 		}
 
 		switch sub := fieldResult.(type) {
-		case chan interface{}:
+		case chan any:
 			for {
 				select {
 				case <-p.Context.Done():

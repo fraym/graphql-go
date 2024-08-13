@@ -9,13 +9,13 @@ import (
 
 var someScalarType = graphql.NewScalar(graphql.ScalarConfig{
 	Name: "SomeScalar",
-	Serialize: func(value interface{}) interface{} {
+	Serialize: func(value any) any {
 		return nil
 	},
-	ParseValue: func(value interface{}) interface{} {
+	ParseValue: func(value any) any {
 		return nil
 	},
-	ParseLiteral: func(valueAST ast.Value) interface{} {
+	ParseLiteral: func(valueAST ast.Value) any {
 		return nil
 	},
 })
@@ -338,7 +338,7 @@ func TestTypeSystem_SchemaMustHaveObjectRootTypes_RejectsASchemaWithoutAQueryTyp
 func TestTypeSystem_SchemaMustContainUniquelyNamedTypes_RejectsASchemaWhichRedefinesABuiltInType(t *testing.T) {
 	fakeString := graphql.NewScalar(graphql.ScalarConfig{
 		Name: "String",
-		Serialize: func(value interface{}) interface{} {
+		Serialize: func(value any) any {
 			return nil
 		},
 	})
@@ -862,7 +862,7 @@ func TestTypeSystem_UnionTypesMustBeResolvable_RejectsAUnionTypeNotDefiningResol
 func TestTypeSystem_ScalarTypesMustBeSerializable_AcceptsAScalarTypeDefiningSerialize(t *testing.T) {
 	_, err := schemaWithFieldType(graphql.NewScalar(graphql.ScalarConfig{
 		Name: "SomeScalar",
-		Serialize: func(value interface{}) interface{} {
+		Serialize: func(value any) any {
 			return nil
 		},
 	}))
@@ -886,13 +886,13 @@ func TestTypeSystem_ScalarTypesMustBeSerializable_RejectsAScalarTypeNotDefiningS
 func TestTypeSystem_ScalarTypesMustBeSerializable_AcceptsAScalarTypeDefiningParseValueAndParseLiteral(t *testing.T) {
 	_, err := schemaWithFieldType(graphql.NewScalar(graphql.ScalarConfig{
 		Name: "SomeScalar",
-		Serialize: func(value interface{}) interface{} {
+		Serialize: func(value any) any {
 			return nil
 		},
-		ParseValue: func(value interface{}) interface{} {
+		ParseValue: func(value any) any {
 			return nil
 		},
-		ParseLiteral: func(valueAST ast.Value) interface{} {
+		ParseLiteral: func(valueAST ast.Value) any {
 			return nil
 		},
 	}))
@@ -904,10 +904,10 @@ func TestTypeSystem_ScalarTypesMustBeSerializable_AcceptsAScalarTypeDefiningPars
 func TestTypeSystem_ScalarTypesMustBeSerializable_RejectsAScalarTypeDefiningParseValueButNotParseLiteral(t *testing.T) {
 	_, err := schemaWithFieldType(graphql.NewScalar(graphql.ScalarConfig{
 		Name: "SomeScalar",
-		Serialize: func(value interface{}) interface{} {
+		Serialize: func(value any) any {
 			return nil
 		},
-		ParseValue: func(value interface{}) interface{} {
+		ParseValue: func(value any) any {
 			return nil
 		},
 	}))
@@ -920,10 +920,10 @@ func TestTypeSystem_ScalarTypesMustBeSerializable_RejectsAScalarTypeDefiningPars
 func TestTypeSystem_ScalarTypesMustBeSerializable_RejectsAScalarTypeDefiningParseLiteralButNotParseValue(t *testing.T) {
 	_, err := schemaWithFieldType(graphql.NewScalar(graphql.ScalarConfig{
 		Name: "SomeScalar",
-		Serialize: func(value interface{}) interface{} {
+		Serialize: func(value any) any {
 			return nil
 		},
-		ParseLiteral: func(valueAST ast.Value) interface{} {
+		ParseLiteral: func(valueAST ast.Value) any {
 			return nil
 		},
 	}))

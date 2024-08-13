@@ -14,7 +14,7 @@ import (
 //
 // n.b. JavaScript's integers are safe between -(2^53 - 1) and 2^53 - 1 because
 // they are internally represented as IEEE 754 doubles.
-func coerceInt(value interface{}) interface{} {
+func coerceInt(value any) any {
 	switch value := value.(type) {
 	case bool:
 		if value {
@@ -156,7 +156,7 @@ var Int = NewScalar(ScalarConfig{
 		"values. Int can represent values between -(2^31) and 2^31 - 1. ",
 	Serialize:  coerceInt,
 	ParseValue: coerceInt,
-	ParseLiteral: func(valueAST ast.Value) interface{} {
+	ParseLiteral: func(valueAST ast.Value) any {
 		switch valueAST := valueAST.(type) {
 		case *ast.IntValue:
 			if intValue, err := strconv.Atoi(valueAST.Value); err == nil {
@@ -167,7 +167,7 @@ var Int = NewScalar(ScalarConfig{
 	},
 })
 
-func coerceFloat(value interface{}) interface{} {
+func coerceFloat(value any) any {
 	switch value := value.(type) {
 	case bool:
 		if value {
@@ -289,7 +289,7 @@ var Float = NewScalar(ScalarConfig{
 		"[IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). ",
 	Serialize:  coerceFloat,
 	ParseValue: coerceFloat,
-	ParseLiteral: func(valueAST ast.Value) interface{} {
+	ParseLiteral: func(valueAST ast.Value) any {
 		switch valueAST := valueAST.(type) {
 		case *ast.FloatValue:
 			if floatValue, err := strconv.ParseFloat(valueAST.Value, 64); err == nil {
@@ -304,7 +304,7 @@ var Float = NewScalar(ScalarConfig{
 	},
 })
 
-func coerceString(value interface{}) interface{} {
+func coerceString(value any) any {
 	if v, ok := value.(*string); ok {
 		if v == nil {
 			return nil
@@ -322,7 +322,7 @@ var String = NewScalar(ScalarConfig{
 		"represent free-form human-readable text.",
 	Serialize:  coerceString,
 	ParseValue: coerceString,
-	ParseLiteral: func(valueAST ast.Value) interface{} {
+	ParseLiteral: func(valueAST ast.Value) any {
 		switch valueAST := valueAST.(type) {
 		case *ast.StringValue:
 			return valueAST.Value
@@ -331,7 +331,7 @@ var String = NewScalar(ScalarConfig{
 	},
 })
 
-func coerceBool(value interface{}) interface{} {
+func coerceBool(value any) any {
 	switch value := value.(type) {
 	case bool:
 		return value
@@ -481,7 +481,7 @@ var Boolean = NewScalar(ScalarConfig{
 	Description: "The `Boolean` scalar type represents `true` or `false`.",
 	Serialize:   coerceBool,
 	ParseValue:  coerceBool,
-	ParseLiteral: func(valueAST ast.Value) interface{} {
+	ParseLiteral: func(valueAST ast.Value) any {
 		switch valueAST := valueAST.(type) {
 		case *ast.BooleanValue:
 			return valueAST.Value
@@ -500,7 +500,7 @@ var ID = NewScalar(ScalarConfig{
 		"(such as `4`) input value will be accepted as an ID.",
 	Serialize:  coerceString,
 	ParseValue: coerceString,
-	ParseLiteral: func(valueAST ast.Value) interface{} {
+	ParseLiteral: func(valueAST ast.Value) any {
 		switch valueAST := valueAST.(type) {
 		case *ast.IntValue:
 			return valueAST.Value
@@ -511,7 +511,7 @@ var ID = NewScalar(ScalarConfig{
 	},
 })
 
-func serializeDateTime(value interface{}) interface{} {
+func serializeDateTime(value any) any {
 	switch value := value.(type) {
 	case time.Time:
 		buff, err := value.MarshalText()
@@ -530,7 +530,7 @@ func serializeDateTime(value interface{}) interface{} {
 	}
 }
 
-func unserializeDateTime(value interface{}) interface{} {
+func unserializeDateTime(value any) any {
 	switch value := value.(type) {
 	case []byte:
 		t := time.Time{}
@@ -560,7 +560,7 @@ var DateTime = NewScalar(ScalarConfig{
 		" The DateTime is serialized as an RFC 3339 quoted string",
 	Serialize:  serializeDateTime,
 	ParseValue: unserializeDateTime,
-	ParseLiteral: func(valueAST ast.Value) interface{} {
+	ParseLiteral: func(valueAST ast.Value) any {
 		switch valueAST := valueAST.(type) {
 		case *ast.StringValue:
 			return unserializeDateTime(valueAST.Value)

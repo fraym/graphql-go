@@ -7,50 +7,49 @@ import (
 )
 
 func TestSubsetSlice_Simple(t *testing.T) {
-
-	super := []interface{}{
+	super := []any{
 		"1", "2", "3",
 	}
-	sub := []interface{}{
+	sub := []any{
 		"3",
 	}
 	if !testutil.ContainSubsetSlice(super, sub) {
 		t.Fatalf("expected slice to be subset of super, got false")
 	}
 }
-func TestSubsetSlice_Simple_Fail(t *testing.T) {
 
-	super := []interface{}{
+func TestSubsetSlice_Simple_Fail(t *testing.T) {
+	super := []any{
 		"1", "2", "3",
 	}
-	sub := []interface{}{
+	sub := []any{
 		"4",
 	}
 	if testutil.ContainSubsetSlice(super, sub) {
 		t.Fatalf("expected slice to not be subset of super, got true")
 	}
 }
-func TestSubsetSlice_NestedSlice(t *testing.T) {
 
-	super := []interface{}{
-		[]interface{}{
+func TestSubsetSlice_NestedSlice(t *testing.T) {
+	super := []any{
+		[]any{
 			"1", "2", "3",
 		},
-		[]interface{}{
+		[]any{
 			"4", "5", "6",
 		},
-		[]interface{}{
+		[]any{
 			"7", "8", "9",
 		},
 	}
-	sub := []interface{}{
-		[]interface{}{
+	sub := []any{
+		[]any{
 			"2",
 		},
-		[]interface{}{
+		[]any{
 			"9",
 		},
-		[]interface{}{
+		[]any{
 			"5",
 		},
 	}
@@ -58,24 +57,24 @@ func TestSubsetSlice_NestedSlice(t *testing.T) {
 		t.Fatalf("expected slice to be subset of super, got false")
 	}
 }
-func TestSubsetSlice_NestedSlice_DifferentLength(t *testing.T) {
 
-	super := []interface{}{
-		[]interface{}{
+func TestSubsetSlice_NestedSlice_DifferentLength(t *testing.T) {
+	super := []any{
+		[]any{
 			"1", "2", "3",
 		},
-		[]interface{}{
+		[]any{
 			"4", "5", "6",
 		},
-		[]interface{}{
+		[]any{
 			"7", "8", "9",
 		},
 	}
-	sub := []interface{}{
-		[]interface{}{
+	sub := []any{
+		[]any{
 			"3",
 		},
-		[]interface{}{
+		[]any{
 			"6",
 		},
 	}
@@ -83,27 +82,27 @@ func TestSubsetSlice_NestedSlice_DifferentLength(t *testing.T) {
 		t.Fatalf("expected slice to be subset of super, got false")
 	}
 }
-func TestSubsetSlice_NestedSlice_Fail(t *testing.T) {
 
-	super := []interface{}{
-		[]interface{}{
+func TestSubsetSlice_NestedSlice_Fail(t *testing.T) {
+	super := []any{
+		[]any{
 			"1", "2", "3",
 		},
-		[]interface{}{
+		[]any{
 			"4", "5", "6",
 		},
-		[]interface{}{
+		[]any{
 			"7", "8", "9",
 		},
 	}
-	sub := []interface{}{
-		[]interface{}{
+	sub := []any{
+		[]any{
 			"3",
 		},
-		[]interface{}{
+		[]any{
 			"3",
 		},
-		[]interface{}{
+		[]any{
 			"9",
 		},
 	}
@@ -113,50 +112,47 @@ func TestSubsetSlice_NestedSlice_Fail(t *testing.T) {
 }
 
 func TestSubset_Simple(t *testing.T) {
-
-	super := map[string]interface{}{
+	super := map[string]any{
 		"a": "1",
 		"b": "2",
 		"c": "3",
 	}
-	sub := map[string]interface{}{
+	sub := map[string]any{
 		"c": "3",
 	}
 	if !testutil.ContainSubset(super, sub) {
 		t.Fatalf("expected map to be subset of super, got false")
 	}
-
 }
-func TestSubset_Simple_Fail(t *testing.T) {
 
-	super := map[string]interface{}{
+func TestSubset_Simple_Fail(t *testing.T) {
+	super := map[string]any{
 		"a": "1",
 		"b": "2",
 		"c": "3",
 	}
-	sub := map[string]interface{}{
+	sub := map[string]any{
 		"d": "3",
 	}
 	if testutil.ContainSubset(super, sub) {
 		t.Fatalf("expected map to not be subset of super, got true")
 	}
-
 }
-func TestSubset_NestedMap(t *testing.T) {
 
-	super := map[string]interface{}{
+func TestSubset_NestedMap(t *testing.T) {
+	super := map[string]any{
 		"a": "1",
 		"b": "2",
 		"c": "3",
-		"d": map[string]interface{}{
+		"d": map[string]any{
 			"aa": "11",
 			"bb": "22",
 			"cc": "33",
 		},
 	}
-	sub := map[string]interface{}{
+	sub := map[string]any{
 		"c": "3",
-		"d": map[string]interface{}{
+		"d": map[string]any{
 			"cc": "33",
 		},
 	}
@@ -164,21 +160,21 @@ func TestSubset_NestedMap(t *testing.T) {
 		t.Fatalf("expected map to be subset of super, got false")
 	}
 }
-func TestSubset_NestedMap_Fail(t *testing.T) {
 
-	super := map[string]interface{}{
+func TestSubset_NestedMap_Fail(t *testing.T) {
+	super := map[string]any{
 		"a": "1",
 		"b": "2",
 		"c": "3",
-		"d": map[string]interface{}{
+		"d": map[string]any{
 			"aa": "11",
 			"bb": "22",
 			"cc": "33",
 		},
 	}
-	sub := map[string]interface{}{
+	sub := map[string]any{
 		"c": "3",
-		"d": map[string]interface{}{
+		"d": map[string]any{
 			"dd": "44",
 		},
 	}
@@ -186,19 +182,19 @@ func TestSubset_NestedMap_Fail(t *testing.T) {
 		t.Fatalf("expected map to not be subset of super, got true")
 	}
 }
-func TestSubset_NestedSlice(t *testing.T) {
 
-	super := map[string]interface{}{
+func TestSubset_NestedSlice(t *testing.T) {
+	super := map[string]any{
 		"a": "1",
 		"b": "2",
 		"c": "3",
-		"d": []interface{}{
+		"d": []any{
 			"11", "22",
 		},
 	}
-	sub := map[string]interface{}{
+	sub := map[string]any{
 		"c": "3",
-		"d": []interface{}{
+		"d": []any{
 			"11",
 		},
 	}
@@ -206,47 +202,47 @@ func TestSubset_NestedSlice(t *testing.T) {
 		t.Fatalf("expected map to be subset of super, got false")
 	}
 }
-func TestSubset_ComplexMixed(t *testing.T) {
 
-	super := map[string]interface{}{
+func TestSubset_ComplexMixed(t *testing.T) {
+	super := map[string]any{
 		"a": "1",
 		"b": "2",
 		"c": "3",
-		"d": map[string]interface{}{
+		"d": map[string]any{
 			"aa": "11",
 			"bb": "22",
-			"cc": []interface{}{
+			"cc": []any{
 				"ttt", "rrr", "sss",
 			},
 		},
-		"e": []interface{}{
+		"e": []any{
 			"111", "222", "333",
 		},
-		"f": []interface{}{
-			[]interface{}{
+		"f": []any{
+			[]any{
 				"9999", "8888", "7777",
 			},
-			[]interface{}{
+			[]any{
 				"6666", "5555", "4444",
 			},
 		},
 	}
-	sub := map[string]interface{}{
+	sub := map[string]any{
 		"c": "3",
-		"d": map[string]interface{}{
+		"d": map[string]any{
 			"bb": "22",
-			"cc": []interface{}{
+			"cc": []any{
 				"sss",
 			},
 		},
-		"e": []interface{}{
+		"e": []any{
 			"111",
 		},
-		"f": []interface{}{
-			[]interface{}{
+		"f": []any{
+			[]any{
 				"8888", "9999",
 			},
-			[]interface{}{
+			[]any{
 				"4444",
 			},
 		},
@@ -255,44 +251,44 @@ func TestSubset_ComplexMixed(t *testing.T) {
 		t.Fatalf("expected map to be subset of super, got false")
 	}
 }
-func TestSubset_ComplexMixed_Fail(t *testing.T) {
 
-	super := map[string]interface{}{
+func TestSubset_ComplexMixed_Fail(t *testing.T) {
+	super := map[string]any{
 		"a": "1",
 		"b": "2",
 		"c": "3",
-		"d": map[string]interface{}{
+		"d": map[string]any{
 			"aa": "11",
 			"bb": "22",
-			"cc": []interface{}{
+			"cc": []any{
 				"ttt", "rrr", "sss",
 			},
 		},
-		"e": []interface{}{
+		"e": []any{
 			"111", "222", "333",
 		},
-		"f": []interface{}{
-			[]interface{}{
+		"f": []any{
+			[]any{
 				"9999", "8888", "7777",
 			},
-			[]interface{}{
+			[]any{
 				"6666", "5555", "4444",
 			},
 		},
 	}
-	sub := map[string]interface{}{
+	sub := map[string]any{
 		"c": "3",
-		"d": map[string]interface{}{
+		"d": map[string]any{
 			"bb": "22",
-			"cc": []interface{}{
+			"cc": []any{
 				"doesnotexist",
 			},
 		},
-		"e": []interface{}{
+		"e": []any{
 			"111",
 		},
-		"f": []interface{}{
-			[]interface{}{
+		"f": []any{
+			[]any{
 				"4444",
 			},
 		},

@@ -9,7 +9,7 @@ import (
 	"github.com/graphql-go/graphql/language/source"
 )
 
-type parseFn func(parser *Parser) (interface{}, error)
+type parseFn func(parser *Parser) (any, error)
 
 // parse operation, fragment, typeSystem{schema, type..., extension, directives} definition
 type parseDefinitionFn func(parser *Parser) (ast.Node, error)
@@ -41,7 +41,7 @@ type ParseOptions struct {
 }
 
 type ParseParams struct {
-	Source  interface{}
+	Source  any
 	Options ParseOptions
 }
 
@@ -258,7 +258,7 @@ func parseVariableDefinitions(parser *Parser) ([]*ast.VariableDefinition, error)
 /**
  * VariableDefinition : Variable : Type DefaultValue?
  */
-func parseVariableDefinition(parser *Parser) (interface{}, error) {
+func parseVariableDefinition(parser *Parser) (any, error) {
 	var (
 		variable *ast.Variable
 		ttype    ast.Type
@@ -340,7 +340,7 @@ func parseSelectionSet(parser *Parser) (*ast.SelectionSet, error) {
  *   - FragmentSpread
  *   - InlineFragment
  */
-func parseSelection(parser *Parser) (interface{}, error) {
+func parseSelection(parser *Parser) (any, error) {
 	if peek(parser, lexer.SPREAD) {
 		return parseFragment(parser)
 	}
@@ -417,7 +417,7 @@ func parseArguments(parser *Parser) ([]*ast.Argument, error) {
 /**
  * Argument : Name : Value
  */
-func parseArgument(parser *Parser) (interface{}, error) {
+func parseArgument(parser *Parser) (any, error) {
 	var (
 		err   error
 		name  *ast.Name
@@ -449,7 +449,7 @@ func parseArgument(parser *Parser) (interface{}, error) {
  *
  * InlineFragment : ... TypeCondition? Directives? SelectionSet
  */
-func parseFragment(parser *Parser) (interface{}, error) {
+func parseFragment(parser *Parser) (any, error) {
 	var err error
 	start := parser.Token.Start
 	if _, err = expect(parser, lexer.SPREAD); err != nil {
@@ -630,7 +630,7 @@ func parseValueLiteral(parser *Parser, isConst bool) (ast.Value, error) {
 	return nil, unexpected(parser, lexer.Token{})
 }
 
-func parseConstValue(parser *Parser) (interface{}, error) {
+func parseConstValue(parser *Parser) (any, error) {
 	value, err := parseValueLiteral(parser, true)
 	if err != nil {
 		return value, err
@@ -638,7 +638,7 @@ func parseConstValue(parser *Parser) (interface{}, error) {
 	return value, nil
 }
 
-func parseValueValue(parser *Parser) (interface{}, error) {
+func parseValueValue(parser *Parser) (any, error) {
 	return parseValueLiteral(parser, false)
 }
 
@@ -905,7 +905,7 @@ func parseSchemaDefinition(parser *Parser) (ast.Node, error) {
 	}), nil
 }
 
-func parseOperationTypeDefinition(parser *Parser) (interface{}, error) {
+func parseOperationTypeDefinition(parser *Parser) (any, error) {
 	start := parser.Token.Start
 	operation, err := parseOperationType(parser)
 	if err != nil {
@@ -1038,7 +1038,7 @@ func parseImplementsInterfaces(parser *Parser) ([]*ast.Named, error) {
 /**
  * FieldDefinition : Description? Name ArgumentsDefinition? : Type Directives?
  */
-func parseFieldDefinition(parser *Parser) (interface{}, error) {
+func parseFieldDefinition(parser *Parser) (any, error) {
 	start := parser.Token.Start
 	description, err := parseDescription(parser)
 	if err != nil {
@@ -1101,7 +1101,7 @@ func parseArgumentDefs(parser *Parser) ([]*ast.InputValueDefinition, error) {
 /**
  * InputValueDefinition : Description? Name : Type DefaultValue? Directives?
  */
-func parseInputValueDef(parser *Parser) (interface{}, error) {
+func parseInputValueDef(parser *Parser) (any, error) {
 	var (
 		description *ast.StringValue
 		name        *ast.Name
@@ -1300,7 +1300,7 @@ func parseEnumTypeDefinition(parser *Parser) (ast.Node, error) {
  *
  * EnumValue : Name
  */
-func parseEnumValueDefinition(parser *Parser) (interface{}, error) {
+func parseEnumValueDefinition(parser *Parser) (any, error) {
 	start := parser.Token.Start
 	description, err := parseDescription(parser)
 	if err != nil {
@@ -1574,12 +1574,12 @@ func unexpectedEmpty(parser *Parser, beginLoc int, openKind, closeKind lexer.Tok
 // and ends with a lex token of closeKind. Advances the parser
 // to the next lex token after the closing token.
 // if zinteger is true, len(nodes) > 0
-func reverse(parser *Parser, openKind lexer.TokenKind, parseFn parseFn, closeKind lexer.TokenKind, zinteger bool) ([]interface{}, error) {
+func reverse(parser *Parser, openKind lexer.TokenKind, parseFn parseFn, closeKind lexer.TokenKind, zinteger bool) ([]any, error) {
 	token, err := expect(parser, openKind)
 	if err != nil {
 		return nil, err
 	}
-	var nodes []interface{}
+	var nodes []any
 	for {
 		if skp, err := skip(parser, closeKind); err != nil {
 			return nil, err
