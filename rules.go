@@ -74,7 +74,9 @@ func ArgumentsOfCorrectTypeRule(context *ValidationContext) *ValidationRuleInsta
 				Kind: func(p visitor.VisitFuncParams) (string, any) {
 					if argAST, ok := p.Node.(*ast.Argument); ok {
 						if argDef := context.Argument(); argDef != nil {
-							if isValid, messages := isValidLiteralValue(argDef.Type, argAST.Value); !isValid {
+							isValid, messages := isValidLiteralValue(argDef.Type, argAST.Value)
+							if !isValid {
+								// if isValid, messages := isValidLiteralValue(argDef.Type, argAST.Value); !isValid {
 								var messagesStr, argNameValue string
 								if argAST.Name != nil {
 									argNameValue = argAST.Name.Value
@@ -1750,9 +1752,9 @@ func isValidLiteralValue(ttype Input, valueAST ast.Value) (bool, []string) {
 		itemType, _ := ttype.OfType.(Input)
 		if valueAST, ok := valueAST.(*ast.ListValue); ok {
 			messagesReduce := []string{}
-			for _, value := range valueAST.Values {
+			for idx, value := range valueAST.Values {
 				_, messages := isValidLiteralValue(itemType, value)
-				for idx, message := range messages {
+				for _, message := range messages {
 					messagesReduce = append(messagesReduce, fmt.Sprintf(`In element #%v: %v`, idx+1, message))
 				}
 			}
@@ -1792,12 +1794,18 @@ func isValidLiteralValue(ttype Input, valueAST ast.Value) (bool, []string) {
 		}
 		return (len(messagesReduce) == 0), messagesReduce
 	case *Scalar:
-		if isNullish(ttype.ParseLiteral(valueAST)) {
-			return false, []string{fmt.Sprintf(`Expected type "%v", found %v.`, ttype.Name(), printer.Print(valueAST))}
+		if _, err := ttype.ParseLiteral(valueAST); err != nil {
+			return false, []string{
+				fmt.Sprintf(`Expected type "%v", found %v.`, ttype.Name(), printer.Print(valueAST)),
+				fmt.Sprintf("Error: %s", err),
+			}
 		}
 	case *Enum:
-		if isNullish(ttype.ParseLiteral(valueAST)) {
-			return false, []string{fmt.Sprintf(`Expected type "%v", found %v.`, ttype.Name(), printer.Print(valueAST))}
+		if _, err := ttype.ParseLiteral(valueAST); err != nil {
+			return false, []string{
+				fmt.Sprintf(`Expected type "%v", found %v.`, ttype.Name(), printer.Print(valueAST)),
+				fmt.Sprintf("Error: %s", err),
+			}
 		}
 	}
 

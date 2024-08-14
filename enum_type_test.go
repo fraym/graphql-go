@@ -8,6 +8,7 @@ import (
 	"github.com/fraym/graphql-go/gqlerrors"
 	"github.com/fraym/graphql-go/language/location"
 	"github.com/fraym/graphql-go/testutil"
+	"github.com/stretchr/testify/assert"
 )
 
 var enumTypeTestColorType = graphql.NewEnum(graphql.EnumConfig{
@@ -192,7 +193,9 @@ func TestTypeSystem_EnumValues_DoesNotAcceptStringLiterals(t *testing.T) {
 		Data: nil,
 		Errors: []gqlerrors.FormattedError{
 			{
-				Message: "Argument \"fromEnum\" has invalid value \"GREEN\".\nExpected type \"Color\", found \"GREEN\".",
+				Message: "Argument \"fromEnum\" has invalid value \"GREEN\".\n" +
+					"Expected type \"Color\", found \"GREEN\".\n" +
+					"Error: Enum Color cannot parse value: GREEN",
 				Locations: []location.SourceLocation{
 					{Line: 1, Column: 23},
 				},
@@ -207,15 +210,14 @@ func TestTypeSystem_EnumValues_DoesNotAcceptStringLiterals(t *testing.T) {
 
 func TestTypeSystem_EnumValues_DoesNotAcceptIncorrectInternalValue(t *testing.T) {
 	query := `{ colorEnum(fromString: "GREEN") }`
-	expected := &graphql.Result{
-		Data: map[string]any{
-			"colorEnum": nil,
-		},
+	expectedData := map[string]any{
+		"colorEnum": nil,
 	}
+
 	result := executeEnumTypeTest(t, query)
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+
+	assert.Equal(t, expectedData, result.Data)
+	assert.Len(t, result.Errors, 1)
 }
 
 func TestTypeSystem_EnumValues_DoesNotAcceptInternalValueInPlaceOfEnumLiteral(t *testing.T) {
@@ -224,7 +226,9 @@ func TestTypeSystem_EnumValues_DoesNotAcceptInternalValueInPlaceOfEnumLiteral(t 
 		Data: nil,
 		Errors: []gqlerrors.FormattedError{
 			{
-				Message: "Argument \"fromEnum\" has invalid value 1.\nExpected type \"Color\", found 1.",
+				Message: "Argument \"fromEnum\" has invalid value 1.\n" +
+					"Expected type \"Color\", found 1.\n" +
+					"Error: Enum Color cannot parse value: 1",
 				Locations: []location.SourceLocation{
 					{Line: 1, Column: 23},
 				},
@@ -243,7 +247,9 @@ func TestTypeSystem_EnumValues_DoesNotAcceptEnumLiteralInPlaceOfInt(t *testing.T
 		Data: nil,
 		Errors: []gqlerrors.FormattedError{
 			{
-				Message: "Argument \"fromInt\" has invalid value GREEN.\nExpected type \"Int\", found GREEN.",
+				Message: "Argument \"fromInt\" has invalid value GREEN.\n" +
+					"Expected type \"Int\", found GREEN.\n" +
+					"Error: cannot parse *ast.EnumValue to int",
 				Locations: []location.SourceLocation{
 					{Line: 1, Column: 23},
 				},
@@ -313,7 +319,9 @@ func TestTypeSystem_EnumValues_DoesNotAcceptInternalValueAsEnumVariable(t *testi
 		Data: nil,
 		Errors: []gqlerrors.FormattedError{
 			{
-				Message: "Variable \"$color\" got invalid value 2.\nExpected type \"Color\", found \"2\".",
+				Message: "Variable \"$color\" got invalid value 2.\n" +
+					"Expected type \"Color\", found \"2\".\n" +
+					"Error: Enum Color cannot parse non string type: 2",
 				Locations: []location.SourceLocation{
 					{Line: 1, Column: 12},
 				},

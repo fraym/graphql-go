@@ -857,7 +857,10 @@ func completeObjectValue(eCtx *executionContext, returnType *Object, fieldASTs [
 
 // completeLeafValue complete a leaf value (Scalar / Enum) by serializing to a valid value, returning nil if serialization is not possible.
 func completeLeafValue(returnType Leaf, result any) any {
-	serializedResult := returnType.Serialize(result)
+	serializedResult, err := returnType.Serialize(result)
+	if err != nil {
+		panic(err)
+	}
 	if isNullish(serializedResult) {
 		return nil
 	}

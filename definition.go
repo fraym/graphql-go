@@ -71,7 +71,7 @@ type Leaf interface {
 	Description() string
 	String() string
 	Error() error
-	Serialize(value any) any
+	Serialize(value any) (any, error)
 }
 
 var (
@@ -151,7 +151,7 @@ func IsAbstractType(ttype any) bool {
 }
 
 // Nullable interface for types that can accept null as a value.
-type Nullable any
+type Nullable interface{}
 
 var (
 	_ Nullable = (*Scalar)(nil)
@@ -223,13 +223,13 @@ type Scalar struct {
 }
 
 // SerializeFn is a function type for serializing a GraphQLScalar type value
-type SerializeFn func(value any) any
+type SerializeFn func(value any) (any, error)
 
 // ParseValueFn is a function type for parsing the value of a GraphQLScalar type
-type ParseValueFn func(value any) any
+type ParseValueFn func(value any) (any, error)
 
 // ParseLiteralFn is a function type for parsing the literal value of a GraphQLScalar type
-type ParseLiteralFn func(valueAST ast.Value) any
+type ParseLiteralFn func(valueAST ast.Value) (any, error)
 
 // ScalarConfig options for creating a new GraphQLScalar
 type ScalarConfig struct {
@@ -283,23 +283,23 @@ func NewScalar(config ScalarConfig) *Scalar {
 	return st
 }
 
-func (st *Scalar) Serialize(value any) any {
+func (st *Scalar) Serialize(value any) (any, error) {
 	if st.scalarConfig.Serialize == nil {
-		return value
+		return nil, fmt.Errorf("don't know how to serialize %s value: %v", st.Name(), value)
 	}
 	return st.scalarConfig.Serialize(value)
 }
 
-func (st *Scalar) ParseValue(value any) any {
+func (st *Scalar) ParseValue(value any) (any, error) {
 	if st.scalarConfig.ParseValue == nil {
-		return value
+		return nil, fmt.Errorf("don't know how to parse %s value: %v", st.Name(), value)
 	}
 	return st.scalarConfig.ParseValue(value)
 }
 
-func (st *Scalar) ParseLiteral(valueAST ast.Value) any {
+func (st *Scalar) ParseLiteral(valueAST ast.Value) (any, error) {
 	if st.scalarConfig.ParseLiteral == nil {
-		return nil
+		return nil, fmt.Errorf("don't know how to parse %s literal: %v", st.Name(), valueAST.GetValue())
 	}
 	return st.scalarConfig.ParseLiteral(valueAST)
 }
@@ -442,7 +442,7 @@ func (gt *Object) Name() string {
 }
 
 func (gt *Object) Description() string {
-	return gt.PrivateDescription
+	return ""
 }
 
 func (gt *Object) String() string {
@@ -640,7 +640,7 @@ type Field struct {
 type FieldConfigArgument []*ArgumentConfig
 
 type ArgumentConfig struct {
-	Name         string `json:"name"`
+	Name         string
 	Type         Input  `json:"type"`
 	DefaultValue any    `json:"defaultValue"`
 	Description  string `json:"description"`
@@ -1041,21 +1041,21 @@ func (gt *Enum) Values() []*EnumValueDefinition {
 	return gt.values
 }
 
-func (gt *Enum) Serialize(value any) any {
+func (gt *Enum) Serialize(value any) (any, error) {
 	v := value
 	rv := reflect.ValueOf(v)
 	if kind := rv.Kind(); kind == reflect.Ptr && rv.IsNil() {
-		return nil
+		return nil, nil
 	} else if kind == reflect.Ptr {
 		v = reflect.Indirect(reflect.ValueOf(v)).Interface()
 	}
 	if enumValue, ok := gt.getValueLookup()[v]; ok {
-		return enumValue.Name
+		return enumValue.Name, nil
 	}
-	return nil
+	return nil, fmt.Errorf("Enum %s cannot represent value: %T(%v)", gt.Name(), v, v)
 }
 
-func (gt *Enum) ParseValue(value any) any {
+func (gt *Enum) ParseValue(value any) (any, error) {
 	var v string
 
 	switch value := value.(type) {
@@ -1064,21 +1064,21 @@ func (gt *Enum) ParseValue(value any) any {
 	case *string:
 		v = *value
 	default:
-		return nil
+		return nil, fmt.Errorf("Enum %s cannot parse non string type: %v", gt.Name(), value)
 	}
 	if enumValue, ok := gt.getNameLookup()[v]; ok {
-		return enumValue.Value
+		return enumValue.Value, nil
 	}
-	return nil
+	return nil, fmt.Errorf("Enum %s cannot parse value: %v", gt.Name(), v)
 }
 
-func (gt *Enum) ParseLiteral(valueAST ast.Value) any {
+func (gt *Enum) ParseLiteral(valueAST ast.Value) (any, error) {
 	if valueAST, ok := valueAST.(*ast.EnumValue); ok {
 		if enumValue, ok := gt.getNameLookup()[valueAST.Value]; ok {
-			return enumValue.Value
+			return enumValue.Value, nil
 		}
 	}
-	return nil
+	return nil, fmt.Errorf("Enum %s cannot parse value: %v", gt.Name(), valueAST.GetValue())
 }
 
 func (gt *Enum) Name() string {
@@ -1311,7 +1311,7 @@ func NewList(ofType Type) *List {
 }
 
 func (gl *List) Name() string {
-	return fmt.Sprintf("[%v]", gl.OfType)
+	return fmt.Sprintf("%v", gl.OfType)
 }
 
 func (gl *List) Description() string {
@@ -1320,7 +1320,7 @@ func (gl *List) Description() string {
 
 func (gl *List) String() string {
 	if gl.OfType != nil {
-		return gl.Name()
+		return fmt.Sprintf("[%v]", gl.OfType)
 	}
 	return ""
 }
