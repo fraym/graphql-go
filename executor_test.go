@@ -754,7 +754,7 @@ func TestThrowsIfNoOperationIsProvided(t *testing.T) {
 
 	expectedErrors := []gqlerrors.FormattedError{
 		{
-			Message:   "Must provide an operation.",
+			Message:   "must provide an operation",
 			Locations: []location.SourceLocation{},
 		},
 	}
@@ -799,7 +799,7 @@ func TestThrowsIfNoOperationNameIsProvidedWithMultipleOperations(t *testing.T) {
 
 	expectedErrors := []gqlerrors.FormattedError{
 		{
-			Message:   "Must provide operation name if query contains multiple operations.",
+			Message:   "must provide operation name if query contains multiple operations",
 			Locations: []location.SourceLocation{},
 		},
 	}
@@ -844,7 +844,7 @@ func TestThrowsIfUnknownOperationNameIsProvided(t *testing.T) {
 
 	expectedErrors := []gqlerrors.FormattedError{
 		{
-			Message:   `Unknown operation named "UnknownExample".`,
+			Message:   `unknown operation named "UnknownExample"`,
 			Locations: []location.SourceLocation{},
 		},
 	}
