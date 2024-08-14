@@ -1,7 +1,6 @@
 package graphql_test
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/fraym/graphql-go"
@@ -131,16 +130,16 @@ var enumTypeTestSchema, _ = graphql.NewSchema(graphql.SchemaConfig{
 	Subscription: enumTypeTestSubscriptionType,
 })
 
-func executeEnumTypeTest(t *testing.T, query string) *graphql.Result {
-	result := g(t, graphql.Params{
+func executeEnumTypeTest(query string) *graphql.Result {
+	result := g(graphql.Params{
 		Schema:        enumTypeTestSchema,
 		RequestString: query,
 	})
 	return result
 }
 
-func executeEnumTypeTestWithParams(t *testing.T, query string, params map[string]any) *graphql.Result {
-	result := g(t, graphql.Params{
+func executeEnumTypeTestWithParams(query string, params map[string]any) *graphql.Result {
+	result := g(graphql.Params{
 		Schema:         enumTypeTestSchema,
 		RequestString:  query,
 		VariableValues: params,
@@ -155,10 +154,8 @@ func TestTypeSystem_EnumValues_AcceptsEnumLiteralsAsInput(t *testing.T) {
 			"colorInt": int64(1),
 		},
 	}
-	result := executeEnumTypeTest(t, query)
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	result := executeEnumTypeTest(query)
+	assert.Equal(t, expected, result)
 }
 
 func TestTypeSystem_EnumValues_EnumMayBeOutputType(t *testing.T) {
@@ -168,10 +165,8 @@ func TestTypeSystem_EnumValues_EnumMayBeOutputType(t *testing.T) {
 			"colorEnum": "GREEN",
 		},
 	}
-	result := executeEnumTypeTest(t, query)
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	result := executeEnumTypeTest(query)
+	assert.Equal(t, expected, result)
 }
 
 func TestTypeSystem_EnumValues_EnumMayBeBothInputAndOutputType(t *testing.T) {
@@ -181,10 +176,8 @@ func TestTypeSystem_EnumValues_EnumMayBeBothInputAndOutputType(t *testing.T) {
 			"colorEnum": "GREEN",
 		},
 	}
-	result := executeEnumTypeTest(t, query)
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	result := executeEnumTypeTest(query)
+	assert.Equal(t, expected, result)
 }
 
 func TestTypeSystem_EnumValues_DoesNotAcceptStringLiterals(t *testing.T) {
@@ -202,7 +195,7 @@ func TestTypeSystem_EnumValues_DoesNotAcceptStringLiterals(t *testing.T) {
 			},
 		},
 	}
-	result := executeEnumTypeTest(t, query)
+	result := executeEnumTypeTest(query)
 	if !testutil.EqualErrorMessage(expected, result, 0) {
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
@@ -214,7 +207,7 @@ func TestTypeSystem_EnumValues_DoesNotAcceptIncorrectInternalValue(t *testing.T)
 		"colorEnum": nil,
 	}
 
-	result := executeEnumTypeTest(t, query)
+	result := executeEnumTypeTest(query)
 
 	assert.Equal(t, expectedData, result.Data)
 	assert.Len(t, result.Errors, 1)
@@ -235,7 +228,7 @@ func TestTypeSystem_EnumValues_DoesNotAcceptInternalValueInPlaceOfEnumLiteral(t 
 			},
 		},
 	}
-	result := executeEnumTypeTest(t, query)
+	result := executeEnumTypeTest(query)
 	if !testutil.EqualErrorMessage(expected, result, 0) {
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
@@ -256,7 +249,7 @@ func TestTypeSystem_EnumValues_DoesNotAcceptEnumLiteralInPlaceOfInt(t *testing.T
 			},
 		},
 	}
-	result := executeEnumTypeTest(t, query)
+	result := executeEnumTypeTest(query)
 	if !testutil.EqualErrorMessage(expected, result, 0) {
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
@@ -272,10 +265,8 @@ func TestTypeSystem_EnumValues_AcceptsJSONStringAsEnumVariable(t *testing.T) {
 			"colorEnum": "BLUE",
 		},
 	}
-	result := executeEnumTypeTestWithParams(t, query, params)
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	result := executeEnumTypeTestWithParams(query, params)
+	assert.Equal(t, expected, result)
 }
 
 func TestTypeSystem_EnumValues_AcceptsEnumLiteralsAsInputArgumentsToMutations(t *testing.T) {
@@ -288,10 +279,8 @@ func TestTypeSystem_EnumValues_AcceptsEnumLiteralsAsInputArgumentsToMutations(t 
 			"favoriteEnum": "GREEN",
 		},
 	}
-	result := executeEnumTypeTestWithParams(t, query, params)
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	result := executeEnumTypeTestWithParams(query, params)
+	assert.Equal(t, expected, result)
 }
 
 func TestTypeSystem_EnumValues_AcceptsEnumLiteralsAsInputArgumentsToSubscriptions(t *testing.T) {
@@ -304,10 +293,8 @@ func TestTypeSystem_EnumValues_AcceptsEnumLiteralsAsInputArgumentsToSubscription
 			"subscribeToEnum": "GREEN",
 		},
 	}
-	result := executeEnumTypeTestWithParams(t, query, params)
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	result := executeEnumTypeTestWithParams(query, params)
+	assert.Equal(t, expected, result)
 }
 
 func TestTypeSystem_EnumValues_DoesNotAcceptInternalValueAsEnumVariable(t *testing.T) {
@@ -328,7 +315,7 @@ func TestTypeSystem_EnumValues_DoesNotAcceptInternalValueAsEnumVariable(t *testi
 			},
 		},
 	}
-	result := executeEnumTypeTestWithParams(t, query, params)
+	result := executeEnumTypeTestWithParams(query, params)
 	if !testutil.EqualErrorMessage(expected, result, 0) {
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
@@ -347,7 +334,7 @@ func TestTypeSystem_EnumValues_DoesNotAcceptStringVariablesAsEnumInput(t *testin
 			},
 		},
 	}
-	result := executeEnumTypeTestWithParams(t, query, params)
+	result := executeEnumTypeTestWithParams(query, params)
 	if !testutil.EqualErrorMessage(expected, result, 0) {
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
@@ -366,7 +353,7 @@ func TestTypeSystem_EnumValues_DoesNotAcceptInternalValueVariableAsEnumInput(t *
 			},
 		},
 	}
-	result := executeEnumTypeTestWithParams(t, query, params)
+	result := executeEnumTypeTestWithParams(query, params)
 	if !testutil.EqualErrorMessage(expected, result, 0) {
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
@@ -383,10 +370,8 @@ func TestTypeSystem_EnumValues_EnumValueMayHaveAnInternalValueOfZero(t *testing.
 			"colorInt":  int64(0),
 		},
 	}
-	result := executeEnumTypeTest(t, query)
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	result := executeEnumTypeTest(query)
+	assert.Equal(t, expected, result)
 }
 
 func TestTypeSystem_EnumValues_EnumValueMayBeNullable(t *testing.T) {
@@ -400,10 +385,8 @@ func TestTypeSystem_EnumValues_EnumValueMayBeNullable(t *testing.T) {
 			"colorInt":  nil,
 		},
 	}
-	result := executeEnumTypeTest(t, query)
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	result := executeEnumTypeTest(query)
+	assert.Equal(t, expected, result)
 }
 
 func TestTypeSystem_EnumValues_EnumValueMayBePointer(t *testing.T) {
@@ -444,13 +427,11 @@ func TestTypeSystem_EnumValues_EnumValueMayBePointer(t *testing.T) {
 			},
 		},
 	}
-	result := g(t, graphql.Params{
+	result := g(graphql.Params{
 		Schema:        enumTypeTestSchema,
 		RequestString: query,
 	})
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestTypeSystem_EnumValues_EnumValueMayBeNilPointer(t *testing.T) {
@@ -484,11 +465,9 @@ func TestTypeSystem_EnumValues_EnumValueMayBeNilPointer(t *testing.T) {
 			},
 		},
 	}
-	result := g(t, graphql.Params{
+	result := g(graphql.Params{
 		Schema:        enumTypeTestSchema,
 		RequestString: query,
 	})
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }

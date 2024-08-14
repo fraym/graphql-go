@@ -216,7 +216,7 @@ func init() {
 					case *NonNull:
 						return TypeKindNonNull, nil
 					}
-					return nil, fmt.Errorf("Unknown kind of type: %v", p.Source)
+					return nil, fmt.Errorf("unknown kind of type: %v", p.Source)
 				},
 			},
 			"name": &Field{

@@ -1,13 +1,13 @@
 package graphql_test
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/fraym/graphql-go"
 	"github.com/fraym/graphql-go/gqlerrors"
 	"github.com/fraym/graphql-go/language/location"
 	"github.com/fraym/graphql-go/testutil"
+	"github.com/stretchr/testify/assert"
 )
 
 // testNumberHolder maps to numberHolderType
@@ -179,9 +179,7 @@ func TestMutations_ExecutionOrdering_EvaluatesMutationsSerially(t *testing.T) {
 	if len(result.Errors) != len(expected.Errors) {
 		t.Fatalf("Unexpected errors, Diff: %v", testutil.Diff(expected.Errors, result.Errors))
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestMutations_EvaluatesMutationsCorrectlyInThePresenceOfAFailedMutation(t *testing.T) {
@@ -253,7 +251,5 @@ func TestMutations_EvaluatesMutationsCorrectlyInThePresenceOfAFailedMutation(t *
 		t.Fatalf("Unexpected errors, Diff: %v", testutil.Diff(expected.Errors, result.Errors))
 	}
 	t.Skipf("Testing equality for slice of errors in results")
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }

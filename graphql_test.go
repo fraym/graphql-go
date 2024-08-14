@@ -154,8 +154,11 @@ func TestBasicGraphQLExample(t *testing.T) {
 }
 
 func TestThreadsContextFromParamsThrough(t *testing.T) {
+	type ContextId struct{}
+	contextIdentifier := ContextId{}
+
 	extractFieldFromContextFn := func(p graphql.ResolveParams) (any, error) {
-		return p.Context.Value(p.Args["key"]), nil
+		return p.Context.Value(contextIdentifier), nil
 	}
 
 	schema, err := graphql.NewSchema(graphql.SchemaConfig{
@@ -183,8 +186,7 @@ func TestThreadsContextFromParamsThrough(t *testing.T) {
 	result := graphql.Do(graphql.Params{
 		Schema:        schema,
 		RequestString: query,
-		//nolint SA1029 ignore this!
-		Context: context.WithValue(context.TODO(), "a", "xyz"),
+		Context:       context.WithValue(context.TODO(), contextIdentifier, "xyz"),
 	})
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)

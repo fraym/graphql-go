@@ -1,13 +1,13 @@
 package graphql_test
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/fraym/graphql-go"
 	"github.com/fraym/graphql-go/gqlerrors"
 	"github.com/fraym/graphql-go/language/location"
 	"github.com/fraym/graphql-go/testutil"
+	"github.com/stretchr/testify/assert"
 )
 
 type testDog struct {
@@ -152,9 +152,8 @@ func TestIsTypeOfUsedToResolveRuntimeTypeForInterface(t *testing.T) {
 	if len(result.Errors) != 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+
+	assert.Equal(t, expected, result)
 }
 
 func TestAppendTypeUsedToAddRuntimeCustomScalarTypeForInterface(t *testing.T) {
@@ -288,9 +287,8 @@ func TestAppendTypeUsedToAddRuntimeCustomScalarTypeForInterface(t *testing.T) {
 	if len(result.Errors) != 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+
+	assert.Equal(t, expected, result)
 }
 
 func TestIsTypeOfUsedToResolveRuntimeTypeForUnion(t *testing.T) {
@@ -387,9 +385,7 @@ func TestIsTypeOfUsedToResolveRuntimeTypeForUnion(t *testing.T) {
 	if len(result.Errors) != 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestResolveTypeOnInterfaceYieldsUsefulError(t *testing.T) {

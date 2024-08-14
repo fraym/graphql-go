@@ -1,13 +1,13 @@
 package graphql_test
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/fraym/graphql-go"
 	"github.com/fraym/graphql-go/gqlerrors"
 	"github.com/fraym/graphql-go/language/location"
 	"github.com/fraym/graphql-go/testutil"
+	"github.com/stretchr/testify/assert"
 )
 
 func checkList(t *testing.T, testType graphql.Type, testData any, expected *graphql.Result) {
@@ -920,13 +920,11 @@ func TestLists_ValueMayBeNilPointer(t *testing.T) {
 			"list": []any{},
 		},
 	}
-	result := g(t, graphql.Params{
+	result := g(graphql.Params{
 		Schema:        listTestSchema,
 		RequestString: query,
 	})
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestLists_NullableListOfInt_ReturnsNull(t *testing.T) {

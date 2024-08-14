@@ -120,7 +120,7 @@ func buildExecutionContext(p buildExecutionCtxParams) (*executionContext, error)
 		switch definition := definition.(type) {
 		case *ast.OperationDefinition:
 			if (p.OperationName == "") && operation != nil {
-				return nil, errors.New("Must provide operation name if query contains multiple operations.")
+				return nil, errors.New("must provide operation name if query contains multiple operations")
 			}
 			if p.OperationName == "" || definition.GetName() != nil && definition.GetName().Value == p.OperationName {
 				operation = definition
@@ -138,9 +138,9 @@ func buildExecutionContext(p buildExecutionCtxParams) (*executionContext, error)
 
 	if operation == nil {
 		if p.OperationName != "" {
-			return nil, fmt.Errorf(`Unknown operation named "%v".`, p.OperationName)
+			return nil, fmt.Errorf(`unknown operation named "%v"`, p.OperationName)
 		}
-		return nil, fmt.Errorf(`Must provide an operation.`)
+		return nil, fmt.Errorf(`must provide an operation`)
 	}
 
 	variableValues, err := getVariableValues(p.Schema, operation.GetVariableDefinitions(), p.Args)
@@ -191,7 +191,7 @@ func executeOperation(p executeOperationParams) *Result {
 // Extracts the root type of the operation from the schema.
 func getOperationRootType(schema Schema, operation ast.Definition) (*Object, error) {
 	if operation == nil {
-		return nil, errors.New("Can only execute queries, mutations and subscription")
+		return nil, errors.New("can only execute queries, mutations and subscription")
 	}
 
 	switch operation.GetOperation() {
@@ -636,7 +636,7 @@ func resolveField(eCtx *executionContext, parentType *Object, source any, fieldA
 
 	var resolveFnError error
 
-	extErrs, resolveFieldFinishFn := handleExtensionsResolveFieldDidStart(eCtx.Schema.extensions, eCtx, &info)
+	extErrs, resolveFieldFinishFn := handleExtensionsResolveFieldDidStart(eCtx, &info)
 	if len(extErrs) != 0 {
 		eCtx.Errors = append(eCtx.Errors, extErrs...)
 	}

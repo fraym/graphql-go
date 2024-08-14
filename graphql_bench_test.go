@@ -8,11 +8,10 @@ import (
 )
 
 type B struct {
-	Query  string
-	Schema graphql.Schema
+	Query string
 }
 
-func benchGraphql(bench B, p graphql.Params, t testing.TB) {
+func benchGraphql(p graphql.Params, t testing.TB) {
 	result := graphql.Do(p)
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
@@ -55,7 +54,6 @@ func nItemsListQueryBenchmark(x int) func(b *testing.B) {
 					}
 				}
 			`,
-			Schema: schema,
 		}
 
 		for i := 0; i < b.N; i++ {
@@ -64,7 +62,7 @@ func nItemsListQueryBenchmark(x int) func(b *testing.B) {
 				Schema:        schema,
 				RequestString: bench.Query,
 			}
-			benchGraphql(bench, params, b)
+			benchGraphql(params, b)
 		}
 	}
 }
@@ -107,8 +105,7 @@ func nFieldsyItemsQueryBenchmark(x int, y int) func(b *testing.B) {
 		query := benchutil.WideSchemaQuery(x)
 
 		bench := B{
-			Query:  query,
-			Schema: schema,
+			Query: query,
 		}
 
 		b.ResetTimer()
@@ -118,7 +115,7 @@ func nFieldsyItemsQueryBenchmark(x int, y int) func(b *testing.B) {
 				Schema:        schema,
 				RequestString: bench.Query,
 			}
-			benchGraphql(bench, params, b)
+			benchGraphql(params, b)
 		}
 	}
 }

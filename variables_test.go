@@ -3,7 +3,6 @@ package graphql_test
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
 	"testing"
 
 	"github.com/fraym/graphql-go"
@@ -11,6 +10,7 @@ import (
 	"github.com/fraym/graphql-go/language/ast"
 	"github.com/fraym/graphql-go/language/location"
 	"github.com/fraym/graphql-go/testutil"
+	"github.com/stretchr/testify/assert"
 )
 
 var testComplexScalar *graphql.Scalar = graphql.NewScalar(graphql.ScalarConfig{
@@ -203,9 +203,7 @@ func TestVariables_ObjectsAndNullability_UsingInlineStructs_ExecutesWithComplexI
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_ObjectsAndNullability_UsingInlineStructs_ProperlyParsesSingleValueToList(t *testing.T) {
@@ -231,9 +229,7 @@ func TestVariables_ObjectsAndNullability_UsingInlineStructs_ProperlyParsesSingle
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_ObjectsAndNullability_UsingInlineStructs_DoesNotUseIncorrectValue(t *testing.T) {
@@ -259,9 +255,7 @@ func TestVariables_ObjectsAndNullability_UsingInlineStructs_DoesNotUseIncorrectV
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_ObjectsAndNullability_UsingInlineStructs_ProperlyRunsParseLiteralOnComplexScalarTypes(t *testing.T) {
@@ -287,9 +281,7 @@ func TestVariables_ObjectsAndNullability_UsingInlineStructs_ProperlyRunsParseLit
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func testVariables_ObjectsAndNullability_UsingVariables_GetAST(t *testing.T) *ast.Document {
@@ -327,9 +319,7 @@ func TestVariables_ObjectsAndNullability_UsingVariables_ExecutesWithComplexInput
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_ObjectsAndNullability_UsingVariables_UsesDefaultValueWhenNotProvided(t *testing.T) {
@@ -355,9 +345,7 @@ func TestVariables_ObjectsAndNullability_UsingVariables_UsesDefaultValueWhenNotP
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_ObjectsAndNullability_UsingVariables_ProperlyParsesSingleValueToList(t *testing.T) {
@@ -386,9 +374,7 @@ func TestVariables_ObjectsAndNullability_UsingVariables_ProperlyParsesSingleValu
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_ObjectsAndNullability_UsingVariables_ExecutesWithComplexScalarInput(t *testing.T) {
@@ -416,9 +402,7 @@ func TestVariables_ObjectsAndNullability_UsingVariables_ExecutesWithComplexScala
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_ObjectsAndNullability_UsingVariables_ErrorsOnNullForNestedNonNull(t *testing.T) {
@@ -630,9 +614,7 @@ func TestVariables_NullableScalars_AllowsNullableInputsToBeOmitted(t *testing.T)
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_NullableScalars_AllowsNullableInputsToBeOmittedInAVariable(t *testing.T) {
@@ -658,9 +640,7 @@ func TestVariables_NullableScalars_AllowsNullableInputsToBeOmittedInAVariable(t 
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_NullableScalars_AllowsNullableInputsToBeOmittedInAnUnlistedVariable(t *testing.T) {
@@ -686,9 +666,7 @@ func TestVariables_NullableScalars_AllowsNullableInputsToBeOmittedInAnUnlistedVa
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_NullableScalars_AllowsNullableInputsToBeSetToNullInAVariable(t *testing.T) {
@@ -718,9 +696,7 @@ func TestVariables_NullableScalars_AllowsNullableInputsToBeSetToNullInAVariable(
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_NullableScalars_AllowsNullableInputsToBeSetToAValueInAVariable(t *testing.T) {
@@ -750,9 +726,7 @@ func TestVariables_NullableScalars_AllowsNullableInputsToBeSetToAValueInAVariabl
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_NullableScalars_AllowsNullableInputsToBeSetToAValueDirectly(t *testing.T) {
@@ -778,9 +752,7 @@ func TestVariables_NullableScalars_AllowsNullableInputsToBeSetToAValueDirectly(t
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_NonNullableScalars_DoesNotAllowNonNullableInputsToBeOmittedInAVariable(t *testing.T) {
@@ -883,9 +855,7 @@ func TestVariables_NonNullableScalars_AllowsNonNullableInputsToBeSetToAValueInAV
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_NonNullableScalars_AllowsNonNullableInputsToBeSetToAValueDirectly(t *testing.T) {
@@ -917,9 +887,7 @@ func TestVariables_NonNullableScalars_AllowsNonNullableInputsToBeSetToAValueDire
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_NonNullableScalars_PassesAlongNullForNonNullableInputsIfExplicitlySetInTheQuery(t *testing.T) {
@@ -951,9 +919,7 @@ func TestVariables_NonNullableScalars_PassesAlongNullForNonNullableInputsIfExpli
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_ListsAndNullability_AllowsListsToBeNull(t *testing.T) {
@@ -983,9 +949,7 @@ func TestVariables_ListsAndNullability_AllowsListsToBeNull(t *testing.T) {
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_ListsAndNullability_AllowsListsToContainValues(t *testing.T) {
@@ -1015,9 +979,7 @@ func TestVariables_ListsAndNullability_AllowsListsToContainValues(t *testing.T) 
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_ListsAndNullability_AllowsListsToContainNull(t *testing.T) {
@@ -1047,9 +1009,7 @@ func TestVariables_ListsAndNullability_AllowsListsToContainNull(t *testing.T) {
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_ListsAndNullability_DoesNotAllowNonNullListsToBeNull(t *testing.T) {
@@ -1110,9 +1070,7 @@ func TestVariables_ListsAndNullability_AllowsNonNullListsToContainValues(t *test
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_ListsAndNullability_AllowsNonNullListsToContainNull(t *testing.T) {
@@ -1141,9 +1099,7 @@ func TestVariables_ListsAndNullability_AllowsNonNullListsToContainNull(t *testin
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_ListsAndNullability_AllowsListsOfNonNullsToBeNull(t *testing.T) {
@@ -1172,9 +1128,7 @@ func TestVariables_ListsAndNullability_AllowsListsOfNonNullsToBeNull(t *testing.
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_ListsAndNullability_AllowsListsOfNonNullsToContainValues(t *testing.T) {
@@ -1203,9 +1157,7 @@ func TestVariables_ListsAndNullability_AllowsListsOfNonNullsToContainValues(t *t
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_ListsAndNullability_DoesNotAllowListOfNonNullsToContainNull(t *testing.T) {
@@ -1308,9 +1260,7 @@ func TestVariables_ListsAndNullability_AllowsNonNullListsOfNonNulsToContainValue
 	if len(result.Errors) != len(expected.Errors) {
 		t.Fatalf("Unexpected errors, Diff: %v", testutil.Diff(expected.Errors, result.Errors))
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_ListsAndNullability_DoesNotAllowNonNullListOfNonNullsToContainNull(t *testing.T) {
@@ -1450,9 +1400,7 @@ func TestVariables_UsesArgumentDefaultValues_WhenNoArgumentProvided(t *testing.T
 	if len(result.Errors) != len(expected.Errors) {
 		t.Fatalf("Unexpected errors, Diff: %v", testutil.Diff(expected.Errors, result.Errors))
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_UsesArgumentDefaultValues_WhenNullableVariableProvided(t *testing.T) {
@@ -1477,9 +1425,7 @@ func TestVariables_UsesArgumentDefaultValues_WhenNullableVariableProvided(t *tes
 	if len(result.Errors) != len(expected.Errors) {
 		t.Fatalf("Unexpected errors, Diff: %v", testutil.Diff(expected.Errors, result.Errors))
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestVariables_UsesArgumentDefaultValues_WhenArgumentProvidedCannotBeParsed(t *testing.T) {
@@ -1504,7 +1450,5 @@ func TestVariables_UsesArgumentDefaultValues_WhenArgumentProvidedCannotBeParsed(
 	if len(result.Errors) != len(expected.Errors) {
 		t.Fatalf("Unexpected errors, Diff: %v", testutil.Diff(expected.Errors, result.Errors))
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }

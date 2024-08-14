@@ -13,6 +13,7 @@ import (
 	"github.com/fraym/graphql-go/gqlerrors"
 	"github.com/fraym/graphql-go/language/location"
 	"github.com/fraym/graphql-go/testutil"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestExecutesArbitraryCode(t *testing.T) {
@@ -205,9 +206,7 @@ func TestExecutesArbitraryCode(t *testing.T) {
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestMergesParallelFragments(t *testing.T) {
@@ -291,9 +290,7 @@ func TestMergesParallelFragments(t *testing.T) {
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 type CustomMap map[string]any
@@ -505,12 +502,13 @@ func TestThreadsRootValueContextCorrectly(t *testing.T) {
 			"a": "stringValue",
 		},
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestThreadsContextCorrectly(t *testing.T) {
+	type ContextId struct{}
+	contextIdentifier := ContextId{}
+
 	query := `
       query Example { a }
     `
@@ -522,7 +520,7 @@ func TestThreadsContextCorrectly(t *testing.T) {
 				"a": &graphql.Field{
 					Type: graphql.String,
 					Resolve: func(p graphql.ResolveParams) (any, error) {
-						return p.Context.Value("foo"), nil
+						return p.Context.Value(contextIdentifier), nil
 					},
 				},
 			},
@@ -537,10 +535,9 @@ func TestThreadsContextCorrectly(t *testing.T) {
 
 	// execute
 	ep := graphql.ExecuteParams{
-		Schema: schema,
-		AST:    ast,
-		//nolint SA1029 ignore this!
-		Context: context.WithValue(context.Background(), "foo", "bar"),
+		Schema:  schema,
+		AST:     ast,
+		Context: context.WithValue(context.Background(), contextIdentifier, "bar"),
 	}
 	result := testutil.TestExecute(t, ep)
 	if len(result.Errors) > 0 {
@@ -552,9 +549,7 @@ func TestThreadsContextCorrectly(t *testing.T) {
 			"a": "bar",
 		},
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestNullsOutErrorSubtrees(t *testing.T) {
@@ -664,9 +659,7 @@ func TestUsesTheInlineOperationIfNoOperationNameIsProvided(t *testing.T) {
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestUsesTheOnlyOperationIfNoOperationNameIsProvided(t *testing.T) {
@@ -708,9 +701,7 @@ func TestUsesTheOnlyOperationIfNoOperationNameIsProvided(t *testing.T) {
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestUsesTheNamedOperationIfOperationNameIsProvided(t *testing.T) {
@@ -752,9 +743,7 @@ func TestUsesTheNamedOperationIfOperationNameIsProvided(t *testing.T) {
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestThrowsIfNoOperationIsProvided(t *testing.T) {
@@ -1001,9 +990,7 @@ func TestUsesTheQuerySchemaForQueries(t *testing.T) {
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestUsesTheMutationSchemaForMutations(t *testing.T) {
@@ -1055,9 +1042,7 @@ func TestUsesTheMutationSchemaForMutations(t *testing.T) {
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestUsesTheSubscriptionSchemaForSubscriptions(t *testing.T) {
@@ -1109,9 +1094,7 @@ func TestUsesTheSubscriptionSchemaForSubscriptions(t *testing.T) {
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestCorrectFieldOrderingDespiteExecutionOrder(t *testing.T) {
@@ -1181,9 +1164,7 @@ func TestCorrectFieldOrderingDespiteExecutionOrder(t *testing.T) {
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 
 	// TODO: test to ensure key ordering
 	// The following does not work
@@ -1247,9 +1228,7 @@ func TestAvoidsRecursion(t *testing.T) {
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestDoesNotIncludeIllegalFieldsInOutput(t *testing.T) {
@@ -1295,9 +1274,7 @@ func TestDoesNotIncludeIllegalFieldsInOutput(t *testing.T) {
 	if len(result.Errors) != 0 {
 		t.Fatalf("wrong result, expected len(%v) errors, got len(%v)", len(expected.Errors), len(result.Errors))
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestDoesNotIncludeArgumentsThatWereNotSet(t *testing.T) {
@@ -1361,9 +1338,7 @@ func TestDoesNotIncludeArgumentsThatWereNotSet(t *testing.T) {
 	if len(result.Errors) > 0 {
 		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
 	}
-	if !reflect.DeepEqual(expected, result) {
-		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
-	}
+	assert.Equal(t, expected, result)
 }
 
 type testSpecialType struct {
@@ -2099,20 +2074,20 @@ func TestThunkErrorsAreHandledCorrectly(t *testing.T) {
 func assertJSON(t *testing.T, expected string, actual any) {
 	var e any
 	if err := json.Unmarshal([]byte(expected), &e); err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 	aJSON, err := json.MarshalIndent(actual, "", "  ")
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 	var a any
 	if err := json.Unmarshal(aJSON, &a); err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 	if !reflect.DeepEqual(e, a) {
 		eNormalizedJSON, err := json.MarshalIndent(e, "", "  ")
 		if err != nil {
-			t.Fatalf(err.Error())
+			t.Fatal(err.Error())
 		}
 		t.Fatalf("Expected JSON:\n\n%v\n\nActual JSON:\n\n%v", string(eNormalizedJSON), string(aJSON))
 	}
