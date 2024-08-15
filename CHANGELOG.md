@@ -1,3 +1,7 @@
+# v0.1.1
+
+- (bug) Respect null values in input values
+
 # v0.1.0
 
 - (internal) Create fork of https://github.com/graphql-go/graphql

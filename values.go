@@ -166,15 +166,16 @@ func coerceValue(ttype Input, value any) (any, error) {
 		}
 
 		for name, field := range ttype.Fields() {
+			_, existsInValueMap := valueMap[name]
 			recur, err := coerceValue(field.Type, valueMap[name])
 			if err != nil {
 				return nil, fmt.Errorf("coerceValue input object %s: %v", name, err)
 			}
 			fieldValue := recur
-			if isNullish(fieldValue) {
+			if isNullish(fieldValue) && !existsInValueMap {
 				fieldValue = field.DefaultValue
 			}
-			if !isNullish(fieldValue) {
+			if !isNullish(fieldValue) || existsInValueMap {
 				obj[name] = fieldValue
 			}
 		}
