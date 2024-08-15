@@ -1,4 +1,4 @@
-# 0.1.0
+# v0.1.0
 
 - (internal) Create fork of https://github.com/graphql-go/graphql
 - (bc) Add errors to serializers
