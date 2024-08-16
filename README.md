@@ -1,8 +1,19 @@
-# graphql [![CircleCI](https://circleci.com/gh/fraym/graphql-go/tree/master.svg?style=svg)](https://circleci.com/gh/fraym/graphql-go/tree/master) [![Go Reference](https://pkg.go.dev/badge/github.com/fraym/graphql-go.svg)](https://pkg.go.dev/github.com/fraym/graphql-go) [![Coverage Status](https://coveralls.io/repos/github/fraym/graphql-go/badge.svg?branch=master)](https://coveralls.io/github/fraym/graphql-go?branch=master) [![Join the chat at https://gitter.im/fraym/graphql-go](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/fraym/graphql-go?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# graphql [![Go Reference](https://pkg.go.dev/badge/github.com/fraym/graphql-go.svg)](https://pkg.go.dev/github.com/fraym/graphql-go)
 
 An implementation of GraphQL in Go. Follows the official reference implementation [`graphql-js`](https://github.com/graphql/graphql-js).
 
 Supports: queries, mutations & subscriptions.
+
+## Fork
+
+This is a fork of [`graphql-go/graphql`](https://github.com/graphql-go/graphql).
+This fork contains a set of changes:
+
+- it requires go 1.22
+- `null` value support
+- arguments in introspection queries are statically ordered (their order won't change on every request)
+- numbers are limited to the JavaScript number space
+- serialisation to `nil` and serialisation errors for scalar values
 
 ### Documentation
 
