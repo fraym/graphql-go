@@ -1,3 +1,7 @@
+# v0.1.2
+
+- (bug) Return null values if a list or map is null
+
 # v0.1.1
 
 - (bug) Respect null values in input values

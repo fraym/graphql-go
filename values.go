@@ -332,6 +332,8 @@ func isNullish(src any) bool {
 		return false
 	case reflect.Float32, reflect.Float64:
 		return math.IsNaN(float64(value.Float()))
+	case reflect.Slice, reflect.Map:
+		return value.IsNil()
 	}
 	return false
 }

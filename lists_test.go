@@ -917,6 +917,74 @@ func TestLists_ValueMayBeNilPointer(t *testing.T) {
 	query := "{ list }"
 	expected := &graphql.Result{
 		Data: map[string]any{
+			"list": (any)(nil),
+		},
+	}
+	result := g(graphql.Params{
+		Schema:        listTestSchema,
+		RequestString: query,
+	})
+	assert.Equal(t, expected, result)
+}
+
+func TestLists_ValueMayBeNilPointerForObjectList(t *testing.T) {
+	listTestSchema, _ := graphql.NewSchema(graphql.SchemaConfig{
+		Query: graphql.NewObject(graphql.ObjectConfig{
+			Name: "Query",
+			Fields: graphql.Fields{
+				"list": &graphql.Field{
+					Type: graphql.NewList(graphql.NewObject(graphql.ObjectConfig{
+						Name: "Object",
+						Fields: graphql.Fields{
+							"field": &graphql.Field{
+								Type: graphql.Int,
+							},
+						},
+					})),
+					Resolve: func(_ graphql.ResolveParams) (any, error) {
+						return []map[string]any(nil), nil
+					},
+				},
+			},
+		}),
+	})
+	query := "{ list { field } }"
+	expected := &graphql.Result{
+		Data: map[string]any{
+			"list": (any)(nil),
+		},
+	}
+	result := g(graphql.Params{
+		Schema:        listTestSchema,
+		RequestString: query,
+	})
+	assert.Equal(t, expected, result)
+}
+
+func TestLists_ValueMayBeEmptyListForObjectList(t *testing.T) {
+	listTestSchema, _ := graphql.NewSchema(graphql.SchemaConfig{
+		Query: graphql.NewObject(graphql.ObjectConfig{
+			Name: "Query",
+			Fields: graphql.Fields{
+				"list": &graphql.Field{
+					Type: graphql.NewList(graphql.NewObject(graphql.ObjectConfig{
+						Name: "Object",
+						Fields: graphql.Fields{
+							"field": &graphql.Field{
+								Type: graphql.Int,
+							},
+						},
+					})),
+					Resolve: func(_ graphql.ResolveParams) (any, error) {
+						return []map[string]any{}, nil
+					},
+				},
+			},
+		}),
+	})
+	query := "{ list { field } }"
+	expected := &graphql.Result{
+		Data: map[string]any{
 			"list": []any{},
 		},
 	}
