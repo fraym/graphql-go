@@ -432,7 +432,7 @@ func valueFromAST(valueAST ast.Value, ttype Input, variables map[string]any) (an
 				if err != nil {
 					return nil, err
 				}
-				value = recur
+				obj[name] = recur
 			} else {
 				value = field.DefaultValue
 			}

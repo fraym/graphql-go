@@ -160,6 +160,8 @@ var Int = NewScalar(ScalarConfig{
 		switch valueAST := valueAST.(type) {
 		case *ast.IntValue:
 			return strconv.ParseInt(valueAST.Value, 10, 64)
+		case *ast.NullValue:
+			return nil, nil
 		}
 		return nil, fmt.Errorf("cannot parse %T to int", valueAST)
 	},
@@ -289,6 +291,8 @@ var Float = NewScalar(ScalarConfig{
 			return strconv.ParseFloat(valueAST.Value, 64)
 		case *ast.IntValue:
 			return strconv.ParseFloat(valueAST.Value, 64)
+		case *ast.NullValue:
+			return nil, nil
 		}
 		return nil, fmt.Errorf("cannot parse %T to float", valueAST)
 	},
@@ -316,6 +320,8 @@ var String = NewScalar(ScalarConfig{
 		switch valueAST := valueAST.(type) {
 		case *ast.StringValue:
 			return valueAST.Value, nil
+		case *ast.NullValue:
+			return nil, nil
 		}
 		return nil, fmt.Errorf("cannot parse %T to string", valueAST)
 	},
@@ -475,6 +481,8 @@ var Boolean = NewScalar(ScalarConfig{
 		switch valueAST := valueAST.(type) {
 		case *ast.BooleanValue:
 			return valueAST.Value, nil
+		case *ast.NullValue:
+			return nil, nil
 		}
 		return nil, fmt.Errorf("cannot parse %T to bool", valueAST)
 	},
@@ -496,6 +504,8 @@ var ID = NewScalar(ScalarConfig{
 			return valueAST.Value, nil
 		case *ast.StringValue:
 			return valueAST.Value, nil
+		case *ast.NullValue:
+			return nil, nil
 		}
 		return nil, fmt.Errorf("cannot parse %T to string", valueAST)
 	},
@@ -560,6 +570,8 @@ var DateTime = NewScalar(ScalarConfig{
 		switch valueAST := valueAST.(type) {
 		case *ast.StringValue:
 			return unserializeDateTime(valueAST.Value)
+		case *ast.NullValue:
+			return nil, nil
 		}
 		return nil, fmt.Errorf("cannot parse %T to string", valueAST)
 	},
