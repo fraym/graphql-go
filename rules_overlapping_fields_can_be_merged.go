@@ -581,7 +581,7 @@ func (rule *overlappingFieldsCanBeMergedRule) getFieldsAndFragmentNames(
 				typeCondition := selection.TypeCondition
 				inlineFragmentType := parentType
 				if typeCondition != nil {
-					ttype, err := typeFromAST(*(rule.context.Schema()), typeCondition)
+					ttype, err := typeFromAST(*rule.context.Schema(), typeCondition)
 					if err == nil {
 						inlineFragmentType, _ = ttype.(Named)
 					}
@@ -609,7 +609,7 @@ func (rule *overlappingFieldsCanBeMergedRule) getReferencedFieldsAndFragmentName
 	if cached, ok := rule.cacheMap[fragment.SelectionSet]; ok && cached != nil {
 		return cached
 	}
-	fragmentType, err := typeFromAST(*(rule.context.Schema()), fragment.TypeCondition)
+	fragmentType, err := typeFromAST(*rule.context.Schema(), fragment.TypeCondition)
 	if err != nil {
 		return nil
 	}

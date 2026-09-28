@@ -37,7 +37,7 @@ type TypeSystemDefinition interface {
 
 var (
 	_ TypeSystemDefinition = (*SchemaDefinition)(nil)
-	_ TypeSystemDefinition = (TypeDefinition)(nil)
+	_ TypeSystemDefinition = TypeDefinition(nil)
 	_ TypeSystemDefinition = (*TypeExtensionDefinition)(nil)
 	_ TypeSystemDefinition = (*DirectiveDefinition)(nil)
 )

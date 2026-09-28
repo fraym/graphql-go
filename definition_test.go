@@ -407,7 +407,7 @@ func TestTypeSystem_DefinitionExample_IncludesInterfacesThunkSubtypesInTheTypeMa
 				Type: graphql.Int,
 			},
 		},
-		Interfaces: (graphql.InterfacesThunk)(func() []*graphql.Interface {
+		Interfaces: graphql.InterfacesThunk(func() []*graphql.Interface {
 			return []*graphql.Interface{someInterface}
 		}),
 		IsTypeOf: func(p graphql.IsTypeOfParams) bool {
@@ -622,7 +622,7 @@ func TestTypeSystem_DefinitionExample_IncludesFieldsThunk(t *testing.T) {
 	var someObject *graphql.Object
 	someObject = graphql.NewObject(graphql.ObjectConfig{
 		Name: "SomeObject",
-		Fields: (graphql.FieldsThunk)(func() graphql.Fields {
+		Fields: graphql.FieldsThunk(func() graphql.Fields {
 			return graphql.Fields{
 				"f": &graphql.Field{
 					Type: graphql.Int,
@@ -642,7 +642,7 @@ func TestTypeSystem_DefinitionExample_IncludesFieldsThunk(t *testing.T) {
 func TestTypeSystem_DefinitionExampe_AllowsCyclicFieldTypes(t *testing.T) {
 	personType := graphql.NewObject(graphql.ObjectConfig{
 		Name: "Person",
-		Fields: (graphql.FieldsThunk)(func() graphql.Fields {
+		Fields: graphql.FieldsThunk(func() graphql.Fields {
 			return graphql.Fields{
 				"name": &graphql.Field{
 					Type: graphql.String,
@@ -706,7 +706,7 @@ func TestTypeSystem_DefinitionExample_IncludesUnionTypesThunk(t *testing.T) {
 
 	someUnion := graphql.NewUnion(graphql.UnionConfig{
 		Name: "SomeUnion",
-		Types: (graphql.UnionTypesThunk)(func() []*graphql.Object {
+		Types: graphql.UnionTypesThunk(func() []*graphql.Object {
 			return []*graphql.Object{someObject, someOtherObject}
 		}),
 		ResolveType: func(p graphql.ResolveTypeParams) *graphql.Object {
@@ -727,7 +727,7 @@ func TestTypeSystem_DefinitionExample_IncludesUnionTypesThunk(t *testing.T) {
 func TestTypeSystem_DefinitionExample_HandlesInvalidUnionTypes(t *testing.T) {
 	someUnion := graphql.NewUnion(graphql.UnionConfig{
 		Name: "SomeUnion",
-		Types: (graphql.InterfacesThunk)(func() []*graphql.Interface {
+		Types: graphql.InterfacesThunk(func() []*graphql.Interface {
 			return []*graphql.Interface{}
 		}),
 		ResolveType: func(p graphql.ResolveTypeParams) *graphql.Object {
