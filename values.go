@@ -392,6 +392,9 @@ func valueFromAST(valueAST ast.Value, ttype Input, variables map[string]any) (an
 	case *NonNull:
 		return valueFromAST(valueAST, ttype.OfType, variables)
 	case *List:
+		if _, ok := valueAST.(*ast.NullValue); ok {
+			return nil, nil
+		}
 		values := []any{}
 		if valueAST, ok := valueAST.(*ast.ListValue); ok {
 			for _, itemAST := range valueAST.Values {
@@ -414,6 +417,9 @@ func valueFromAST(valueAST ast.Value, ttype Input, variables map[string]any) (an
 			ov *ast.ObjectValue
 			of *ast.ObjectField
 		)
+		if _, ok = valueAST.(*ast.NullValue); ok {
+			return nil, nil
+		}
 		if ov, ok = valueAST.(*ast.ObjectValue); !ok {
 			return nil, fmt.Errorf("expected %T, found %T", ov, valueAST)
 		}
