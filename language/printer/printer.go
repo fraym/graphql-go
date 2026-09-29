@@ -311,7 +311,11 @@ var printDocASTReducer = map[string]visitor.VisitFunc{
 			typeCondition := fmt.Sprintf("%v", node.TypeCondition)
 			directives := toSliceString(node.Directives)
 			selectionSet := fmt.Sprintf("%v", node.SelectionSet)
-			return visitor.ActionUpdate, "... on " + typeCondition + " " + wrap("", join(directives, " "), " ") + selectionSet
+			return visitor.ActionUpdate, "... on " + typeCondition + " " + wrap(
+				"",
+				join(directives, " "),
+				" ",
+			) + selectionSet
 		case map[string]any:
 			name := getMapValueString(node, "Name")
 			directives := toSliceString(getMapValue(node, "Directives"))
@@ -342,13 +346,21 @@ var printDocASTReducer = map[string]visitor.VisitFunc{
 			typeCondition := fmt.Sprintf("%v", node.TypeCondition)
 			directives := toSliceString(node.Directives)
 			selectionSet := fmt.Sprintf("%v", node.SelectionSet)
-			return visitor.ActionUpdate, "fragment " + name + " on " + typeCondition + " " + wrap("", join(directives, " "), " ") + selectionSet
+			return visitor.ActionUpdate, "fragment " + name + " on " + typeCondition + " " + wrap(
+				"",
+				join(directives, " "),
+				" ",
+			) + selectionSet
 		case map[string]any:
 			name := getMapValueString(node, "Name")
 			typeCondition := getMapValueString(node, "TypeCondition")
 			directives := toSliceString(getMapValue(node, "Directives"))
 			selectionSet := getMapValueString(node, "SelectionSet")
-			return visitor.ActionUpdate, "fragment " + name + " on " + typeCondition + " " + wrap("", join(directives, " "), " ") + selectionSet
+			return visitor.ActionUpdate, "fragment " + name + " on " + typeCondition + " " + wrap(
+				"",
+				join(directives, " "),
+				" ",
+			) + selectionSet
 		}
 		return visitor.ActionNoChange, nil
 	},

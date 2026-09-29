@@ -1073,6 +1073,9 @@ func (gt *Enum) ParseValue(value any) (any, error) {
 }
 
 func (gt *Enum) ParseLiteral(valueAST ast.Value) (any, error) {
+	if _, ok := valueAST.(*ast.NullValue); ok {
+		return nil, nil
+	}
 	if valueAST, ok := valueAST.(*ast.EnumValue); ok {
 		if enumValue, ok := gt.getNameLookup()[valueAST.Value]; ok {
 			return enumValue.Value, nil

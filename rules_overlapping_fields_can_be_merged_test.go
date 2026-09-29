@@ -468,7 +468,7 @@ func init() {
 	})
 	stringBoxObject = graphql.NewObject(graphql.ObjectConfig{
 		Name: "StringBox",
-		Interfaces: (graphql.InterfacesThunk)(func() []*graphql.Interface {
+		Interfaces: graphql.InterfacesThunk(func() []*graphql.Interface {
 			return []*graphql.Interface{someBoxInterface}
 		}),
 		Fields: graphql.FieldsThunk(func() graphql.Fields {
@@ -496,7 +496,7 @@ func init() {
 	})
 	intBoxObject = graphql.NewObject(graphql.ObjectConfig{
 		Name: "IntBox",
-		Interfaces: (graphql.InterfacesThunk)(func() []*graphql.Interface {
+		Interfaces: graphql.InterfacesThunk(func() []*graphql.Interface {
 			return []*graphql.Interface{someBoxInterface}
 		}),
 		Fields: graphql.FieldsThunk(func() graphql.Fields {
@@ -535,7 +535,7 @@ func init() {
 	})
 	NonNullStringBox1Impl := graphql.NewObject(graphql.ObjectConfig{
 		Name: "NonNullStringBox1Impl",
-		Interfaces: (graphql.InterfacesThunk)(func() []*graphql.Interface {
+		Interfaces: graphql.InterfacesThunk(func() []*graphql.Interface {
 			return []*graphql.Interface{someBoxInterface, nonNullStringBox1Interface}
 		}),
 		Fields: graphql.Fields{
@@ -563,7 +563,7 @@ func init() {
 	})
 	NonNullStringBox2Impl := graphql.NewObject(graphql.ObjectConfig{
 		Name: "NonNullStringBox2Impl",
-		Interfaces: (graphql.InterfacesThunk)(func() []*graphql.Interface {
+		Interfaces: graphql.InterfacesThunk(func() []*graphql.Interface {
 			return []*graphql.Interface{someBoxInterface, nonNullStringBox2Interface}
 		}),
 		Fields: graphql.Fields{

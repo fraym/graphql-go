@@ -33,7 +33,13 @@ func TestTypeSystem_Scalar_ParseValueOutputDateTime(t *testing.T) {
 			t.Fatalf("failed DateTime.ParseValue(%v(%v)), should have failed", reflect.TypeOf(test.Value), test.Value)
 		} else if val != test.Expected {
 			reflectedValue := reflect.ValueOf(test.Value)
-			t.Fatalf("failed DateTime.ParseValue(%v(%v)), expected: %v, got %v", reflectedValue.Type(), test.Value, test.Expected, val)
+			t.Fatalf(
+				"failed DateTime.ParseValue(%v(%v)), expected: %v, got %v",
+				reflectedValue.Type(),
+				test.Value,
+				test.Expected,
+				val,
+			)
 		}
 	}
 }
@@ -71,7 +77,13 @@ func TestTypeSystem_Scalar_ParseLiteralOutputDateTime(t *testing.T) {
 			if err == nil && testCase.Fails {
 				t.Fatalf("failed DateTime.ParseLiteral(%T(%v)), should have failed", testCase.Literal, testCase.Literal)
 			} else if parsed != testCase.Expected {
-				t.Fatalf("failed DateTime.ParseLiteral(%T(%v)), expected: %v, got %v", testCase.Literal, testCase.Literal, parsed, testCase.Expected)
+				t.Fatalf(
+					"failed DateTime.ParseLiteral(%T(%v)), expected: %v, got %v",
+					testCase.Literal,
+					testCase.Literal,
+					parsed,
+					testCase.Expected,
+				)
 			}
 		})
 	}

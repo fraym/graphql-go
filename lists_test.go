@@ -917,7 +917,7 @@ func TestLists_ValueMayBeNilPointer(t *testing.T) {
 	query := "{ list }"
 	expected := &graphql.Result{
 		Data: map[string]any{
-			"list": (any)(nil),
+			"list": any(nil),
 		},
 	}
 	result := g(graphql.Params{
@@ -951,7 +951,7 @@ func TestLists_ValueMayBeNilPointerForObjectList(t *testing.T) {
 	query := "{ list { field } }"
 	expected := &graphql.Result{
 		Data: map[string]any{
-			"list": (any)(nil),
+			"list": any(nil),
 		},
 	}
 	result := g(graphql.Params{

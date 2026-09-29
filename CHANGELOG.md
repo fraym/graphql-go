@@ -1,3 +1,7 @@
+# v0.1.5
+
+- (bug) Coerce literal null values for input object, list and enum fields instead of failing the whole argument
+
 # v0.1.4
 
 - (improvement) Static sorting of types in introspection queries

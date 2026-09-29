@@ -583,7 +583,7 @@ func TestTypeSystem_ObjectInterfacesMustBeArray_AcceptsAnObjectTypeWithArrayInte
 	})
 	_, err := schemaWithFieldType(graphql.NewObject(graphql.ObjectConfig{
 		Name: "SomeObject",
-		Interfaces: (graphql.InterfacesThunk)(func() []*graphql.Interface {
+		Interfaces: graphql.InterfacesThunk(func() []*graphql.Interface {
 			return []*graphql.Interface{anotherInterfaceType}
 		}),
 		Fields: graphql.Fields{
@@ -684,7 +684,7 @@ func TestTypeSystem_InputObjectsMustHaveFields_AcceptsAnInputObjectTypeWithField
 func TestTypeSystem_InputObjectsMustHaveFields_AcceptsAnInputObjectTypeWithAFieldFunction(t *testing.T) {
 	_, err := schemaWithInputObject(graphql.NewInputObject(graphql.InputObjectConfig{
 		Name: "SomeInputObject",
-		Fields: (graphql.InputObjectConfigFieldMapThunk)(func() graphql.InputObjectConfigFieldMap {
+		Fields: graphql.InputObjectConfigFieldMapThunk(func() graphql.InputObjectConfigFieldMap {
 			return graphql.InputObjectConfigFieldMap{
 				"f": &graphql.InputObjectFieldConfig{
 					Type: graphql.String,
@@ -1454,7 +1454,7 @@ func TestTypeSystem_ObjectsMustAdhereToInterfaceTheyImplement_AcceptsAnObjectWit
 		ResolveType: func(p graphql.ResolveTypeParams) *graphql.Object {
 			return nil
 		},
-		Fields: (graphql.FieldsThunk)(func() graphql.Fields {
+		Fields: graphql.FieldsThunk(func() graphql.Fields {
 			return graphql.Fields{
 				"field": &graphql.Field{
 					Type: anotherInterface,
@@ -1466,7 +1466,7 @@ func TestTypeSystem_ObjectsMustAdhereToInterfaceTheyImplement_AcceptsAnObjectWit
 	anotherObject = graphql.NewObject(graphql.ObjectConfig{
 		Name:       "AnotherObject",
 		Interfaces: []*graphql.Interface{anotherInterface},
-		Fields: (graphql.FieldsThunk)(func() graphql.Fields {
+		Fields: graphql.FieldsThunk(func() graphql.Fields {
 			return graphql.Fields{
 				"field": &graphql.Field{
 					Type: anotherObject,
